@@ -1,0 +1,77 @@
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import sharp from 'sharp';
+import type { RequestHandler } from './$types';
+import { deleteImage } from '$lib/core/images';
+
+
+export const GET: RequestHandler = async ({ params, url }) => {
+    const id = params.id as string;
+    const width = url.searchParams.get('width');
+    const height = url.searchParams.get('height');
+
+
+    try {
+        const imagePath = path.join('images/', id); // Replace 'path/to/images' with the actual path to your images directory
+        const imageBuffer = await fs.readFile(imagePath);
+
+        const resizedImageBuffer = sharp(imageBuffer)
+
+        if (!width && !height) {
+            return new Response(imageBuffer, {
+                headers: {
+                    'Content-Type': 'image/jpeg', // Replace with the appropriate content type for your images
+                },
+            });
+        }
+
+        if (width && !height) {
+            resizedImageBuffer.resize(parseInt(width));
+        }
+        else if (!width && height) {
+            resizedImageBuffer.resize(null, parseInt(height));
+        }
+        else {
+            resizedImageBuffer.resize(parseInt(width!), parseInt(height!));
+        }
+
+        return new Response(await resizedImageBuffer.toBuffer(), {
+            headers: {
+                'Content-Type': 'image/jpeg', // Replace with the appropriate content type for your images
+            },
+        });
+    } catch (error) {
+        return new Response(JSON.stringify({ error: 'Image not found' }), {
+            status: 404,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+    }
+};
+
+export const DELETE: RequestHandler = async ({ params }) => {
+    const id = Number(params.id);
+    if (isNaN(id)) {
+        return new Response(JSON.stringify({ error: 'Invalid ID' }), {
+            status: 400,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+    }
+
+    try {
+        await deleteImage(id);
+        return new Response(null, {
+            status: 204,
+        });
+    } catch (error) {
+        return new Response(JSON.stringify({ error }), {
+            status: 500,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+    }
+};
