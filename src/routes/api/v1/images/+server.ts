@@ -8,21 +8,16 @@ export const POST: RequestHandler = async ({ request }) => {
     const data = await request.formData();
     const files: File[] = data.getAll('images') as File[]; // Assuming form field name is 'images'
 
-    // Ensure the uploads directory exists
-    const uploadDir = "images"
-    if (!await fs.stat(uploadDir).catch(() => null))
-        await fs.mkdir(uploadDir, { recursive: true })
-
     // Array to store paths of uploaded files
     const uploadedFiles = [];
     const failedFiles = [];
 
-    for (const file of files) {
+    for (const item of files) {
         try {
-            const filePath = saveImage(file)
+            const filePath = await saveImage(item)
             uploadedFiles.push(filePath);
         } catch (error) {
-            failedFiles.push(file.name)
+            failedFiles.push(item.name)
         }
     }
     return json({ success: true, files: uploadedFiles, failed: failedFiles })
@@ -48,7 +43,6 @@ export const GET: RequestHandler = async ({ params }) => {
 export const DELETE: RequestHandler = async ({ request }) => {
     const body = await request.json()
     const ids = body.ids as number[]
-    console.log(ids)
     try {
         for (const item of ids) {
             await deleteImage(item)

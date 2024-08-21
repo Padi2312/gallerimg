@@ -2,6 +2,7 @@ import { env } from '$env/dynamic/private';
 import { SvelteKitAuth, type User } from "@auth/sveltekit";
 import type { Provider } from '@auth/sveltekit/providers';
 import Credentials from '@auth/sveltekit/providers/credentials';
+import * as crypto from 'crypto';
 
 const providers: Provider[] = [
     Credentials({
@@ -11,8 +12,8 @@ const providers: Provider[] = [
             password: {},
         },
         authorize: (credentials, request: Request) => {
-            if (credentials.username === env.ADMIN_EMAIL && credentials.password === env.ADMIN_PASSWORD) {
-                request.redirect
+            if (credentials.username === (env.ADMIN_USERNAME ?? "admin")
+                && credentials.password === (env.ADMIN_PASSWORD ?? "admin")) {
                 return {
                     id: "1",
                     name: "Admin",
@@ -27,6 +28,7 @@ const providers: Provider[] = [
 export const { handle, signIn, signOut } = SvelteKitAuth({
     trustHost: true,
     providers: providers,
+    secret: env.AUTH_SECRET ?? crypto.randomBytes(32).toString('base64'),
     callbacks: {
         session({ session }) {
             // Rewrite data here so we can get userId
@@ -38,9 +40,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                 expires: session.expires
             }
             return data
-        },
-        redirect({ url }) {
-            return "/admin/dashboard"
         }
     },
     // pages: {

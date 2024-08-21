@@ -1,38 +1,24 @@
-# create-svelte
+# Gallerimg
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+Gallerimg is a simple image gallery website. It allows a user to upload images and view them in a gallery. The user can also delete images from the gallery.
 
-## Creating a project
+## Installation
 
-If you're seeing this, you've probably already done this step. Congrats!
+TBD
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Data Paths
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- `data/db.sqlite` - SQLite database file
+- `data/images` - Image uploads directory
 
-## Developing
+## Environment Variables
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+| Env variable     | Description                                                   |
+| ---------------- | ------------------------------------------------------------- |
+| `SQLITE_PATH`    | Path to the SQLite database file. _(default: data/db.sqlite)_ |
+| `AUTH_SECRET`    | Secret key for JWT authentication. _(default: secret)_        |
+| `ADMIN_USERNAME` | Username for the admin account. _(default: admin)_            |
+| `ADMIN_PASSWORD` | Password for the admin account. _(default: admin)_            |
 
-```bash
-npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

@@ -2,7 +2,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import sharp from 'sharp';
 import type { RequestHandler } from './$types';
-import { deleteImage } from '$lib/core/images';
+import { deleteImage, loadImage } from '$lib/core/images';
 
 
 export const GET: RequestHandler = async ({ params, url }) => {
@@ -10,11 +10,8 @@ export const GET: RequestHandler = async ({ params, url }) => {
     const width = url.searchParams.get('width');
     const height = url.searchParams.get('height');
 
-
     try {
-        const imagePath = path.join('images/', id); // Replace 'path/to/images' with the actual path to your images directory
-        const imageBuffer = await fs.readFile(imagePath);
-
+        const imageBuffer = await loadImage(id);
         const resizedImageBuffer = sharp(imageBuffer)
 
         if (!width && !height) {

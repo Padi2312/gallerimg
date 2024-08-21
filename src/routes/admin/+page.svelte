@@ -44,6 +44,7 @@
 				<input
 					class="flex h-10 w-full"
 					id="password"
+					name="password"
 					required
 					type="password"
 					bind:value={password}
@@ -53,7 +54,7 @@
 		<div class="flex items-center p-6">
 			<button
 				class="inline-flex h-10 w-full items-center justify-center whitespace-nowrap text-sm font-medium"
-				onclick={() => signIn('credentials', { email: username, password })}
+				onclick={async () => await signIn('credentials', { username, password })}
 			>
 				Sign In
 			</button>

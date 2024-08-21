@@ -3,8 +3,19 @@ import * as crypto from 'crypto';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { imagesRepository } from "../database/repositories";
+import { logger } from '$lib';
 
-const IMAGE_FOLDER = "images";
+const IMAGE_FOLDER = "data/images";
+
+export const initImages = async () => {
+    // Ensure the uploads directory exists
+    if (!await fs.stat(IMAGE_FOLDER).catch(() => null)) {
+
+        await fs.mkdir(IMAGE_FOLDER, { recursive: true })
+        logger.info('Images directory path:', IMAGE_FOLDER)
+    }
+}
+
 export const getImagePath = (filename: string): string => path.join(IMAGE_FOLDER, filename)
 
 export const getImageAmount = (): number => {
@@ -13,10 +24,6 @@ export const getImageAmount = (): number => {
 
 export const saveImage = async (file: File): Promise<string> => {
     try {
-        // Ensure the uploads directory exists
-        if (!await fs.stat(IMAGE_FOLDER).catch(() => null))
-            await fs.mkdir(IMAGE_FOLDER, { recursive: true })
-
         const buffer = Buffer.from(await file.arrayBuffer());
         const fileName = crypto.randomUUID() + path.extname(file.name); // Random file name with original extension
         const filePath = getImagePath(fileName);
@@ -31,6 +38,11 @@ export const saveImage = async (file: File): Promise<string> => {
         throw error
     }
 
+}
+
+export const loadImage = async (filename: string): Promise<Buffer> => {
+    const filePath = getImagePath(filename);
+    return await fs.readFile(filePath)
 }
 
 export const deleteImage = async (id: number): Promise<void> => {

@@ -1,23 +1,24 @@
 import { env } from '$env/dynamic/private';
 import { logger } from '$lib';
-import type { RunResult, Database as SQLiteDatabase, Transaction } from 'better-sqlite3';
-import SQLite from 'better-sqlite3';
+import { Database as SQLiteDatabase } from "bun:sqlite";
 import * as fs from 'fs';
 import * as path from 'path';
-//@ts-ignore
-import sqlSchema from './schema.sql';
+
 
 class Database {
-    private db: SQLiteDatabase;
+    private db?: SQLiteDatabase;
     private dbPath: string;
+
     constructor(databasePath?: string) {
         try {
             if (!databasePath) {
-                databasePath = env.SQLITE_PATH ?? 'database/db.sqlite';
+                if (env.SQLITE_PATH)
+                    databasePath = env.SQLITE_PATH
+                else
+                    databasePath = "data/db.sqlite";
             }
             this.dbPath = databasePath;
-            this.db = new SQLite(this.dbPath);
-            logger.debug('Connected to the SQLite database.');
+            logger.info('Database path:', this.dbPath);
         } catch (err) {
             logger.error('Failed to open database:', (err as Error).message);
             throw new Error('Failed to initialize database connection.');
@@ -26,34 +27,33 @@ class Database {
 
     init() {
         // Create the directory if it doesn't exist
-        fs.mkdirSync(path.dirname(this.dbPath), { recursive: true })
+        fs.mkdirSync(path.dirname(this.dbPath), { recursive: true });
+        this.db = new SQLiteDatabase(this.dbPath, { create: true });
+        logger.debug('Connected to the SQLite database.');
 
         // Create the database with schema.sql
-        const schemaPath = path.join(process.cwd(), sqlSchema);
-        const schema = fs.readFileSync(schemaPath, 'utf-8');
-        const result = this.db.exec(schema)
-        if (!result) {
-            throw new Error('Failed to initialize database schema.');
-        }
+        const schema = fs.readFileSync("database/schema.sql", 'utf-8');
+        this.db.exec(schema);
+        logger.debug('Database schema initialized.');
     }
 
-    run(query: string, params: any[] = []): RunResult | undefined {
+    run(query: string, params: Record<string, any> = {}) {
+        if (!this.db) throw new Error('Database connection not initialized.');
         try {
             logger.debug('Executing query:', query, params);
-            const stmt = this.db.prepare(query);
-            return stmt.run(...params);
+            const stmt = this.db.query(query);
+            return stmt.run(params);
         } catch (err) {
             logger.error('Error running query:', (err as Error).message);
             return undefined; // or handle error appropriately
         }
     }
+
     transaction<T>(cb: (db: Database) => T): T {
-        const txFunction = this.db.transaction((sqliteDb: SQLiteDatabase) => {
-            return cb(this);
-        });
+        if (!this.db) throw new Error('Database connection not initialized.');
         try {
             logger.debug('Starting transaction');
-            const result = txFunction(this.db);
+            const result = this.db.transaction(() => cb(this))();
             logger.debug('Transaction completed successfully');
             return result;
         } catch (err) {
@@ -62,23 +62,24 @@ class Database {
         }
     }
 
-
-    get<T>(query: string, params: any[] = []): T | undefined {
+    get<T>(query: string, params: Record<string, any> = {}): T | undefined {
+        if (!this.db) throw new Error('Database connection not initialized.');
         try {
             logger.debug('Executing query:', query, params);
-            const stmt = this.db.prepare(query);
-            return stmt.get(...params) as T;
+            const stmt = this.db.query(query);
+            return stmt.get(params) as T;
         } catch (err) {
             logger.error('Error executing query:', (err as Error).message);
             return undefined; // or handle error appropriately
         }
     }
 
-    all<T>(query: string, params: any[] = []): T[] | undefined {
+    all<T>(query: string, params: Record<string, any> = {}): T[] | undefined {
+        if (!this.db) throw new Error('Database connection not initialized.');
         try {
             logger.debug('Executing query:', query, params);
-            const stmt = this.db.prepare(query);
-            return stmt.all(...params) as T[];
+            const stmt = this.db.query(query);
+            return stmt.all(params) as T[];
         } catch (err) {
             logger.error('Error executing query:', (err as Error).message);
             return undefined; // or handle error appropriately
@@ -86,6 +87,8 @@ class Database {
     }
 
     close(): void {
+        if (!this.db) throw new Error('Database connection not initialized.');
+
         try {
             this.db.close();
             logger.debug('Database connection closed.');
