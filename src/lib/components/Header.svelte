@@ -22,7 +22,7 @@
 			{/if}
 			<a href="/">
 				<div class="relative flex items-center space-x-2">
-					<Fa icon={faImage} class="text-2xl" />
+					<img src="/favicon.png" alt="Gallerimg" class="h-8 w-8" />
 					<h1 class=" text-2xl font-bold">Gallerimg</h1>
 
 					<p class="absolute -bottom-3 right-4 text-xs">by parndt</p>
