@@ -16,7 +16,7 @@
 			{#if showToggleSidebar}
 				<div class="lg:hidden">
 					<button onclick={toggleSidebar} class="!bg-transparent ps-0">
-						<Fa icon={faBars} class="text-2xl" />
+						<Fa icon={faBars} class="text-2xl text-text" />
 					</button>
 				</div>
 			{/if}
