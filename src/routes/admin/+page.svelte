@@ -1,9 +1,14 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
+	import { focus } from '$lib/use-directives/use-focus.svelte';
 	import { signIn } from '@auth/sveltekit/client';
 
 	let username = $state('');
 	let password = $state('');
+
+	const submit = async () => {
+		await signIn('credentials', { username, password });
+	};
 </script>
 
 <Header />
@@ -29,7 +34,9 @@
 					name="username"
 					required
 					type="text"
+					use:focus
 					bind:value={username}
+					tabindex="0"
 				/>
 			</div>
 			<div class="space-y-2">
@@ -47,14 +54,17 @@
 					name="password"
 					required
 					type="password"
+					onkeydown={(e) => e.key === 'Enter' && submit()}
 					bind:value={password}
+					tabindex="0"
 				/>
 			</div>
 		</div>
 		<div class="flex items-center p-6">
 			<button
 				class="inline-flex h-10 w-full items-center justify-center whitespace-nowrap text-sm font-medium"
-				onclick={async () => await signIn('credentials', { username, password })}
+				onclick={submit}
+				tabindex="0"
 			>
 				Sign In
 			</button>
