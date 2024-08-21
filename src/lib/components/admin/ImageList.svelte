@@ -67,6 +67,7 @@
 	<div class="bg-primary/10 flex items-center justify-between p-4">
 		<span>{selectedImages.size} of {images.length} image(s) selected</span>
 		<div class="flex items-center space-x-2">
+			<a class="btn" href="/admin/photos/upload"> Upload </a>
 			<button
 				onclick={deleteSelected}
 				disabled={selectedImages.size === 0}

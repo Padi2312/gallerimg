@@ -2,7 +2,7 @@
 	type LoadingSpinnerProps = {
 		size?: number;
 	};
-	let { size = 7 }: LoadingSpinnerProps = $props();
+	let { size = 8 }: LoadingSpinnerProps = $props();
 </script>
 
 <div

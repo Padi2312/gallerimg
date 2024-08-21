@@ -23,20 +23,26 @@
 		--color-bg-secondary: #333;
 		--color-border: #444;
 	}
+
+	html,
+	body {
+		@apply bg-bg text-text;
+	}
+
+	button {
+		/* @apply px-4 py-2 rounded border-border bg-transparent font-medium; */
+		@apply btn;
+	}
+
+	input {
+		@apply rounded-md border border-border bg-bg-secondary px-4 py-2 text-text;
+	}
 }
 
-html,
-body {
-	@apply bg-bg text-text;
-}
-
-button {
-	/* @apply px-4 py-2 rounded border-border bg-transparent font-medium; */
-	@apply rounded-md bg-primary px-4 py-2 font-semibold text-white transition-colors duration-300 ease-in-out;
-	@apply hover:bg-secondary;
-	@apply active:bg-secondary disabled:cursor-not-allowed disabled:opacity-50;
-}
-
-input {
-	@apply rounded-md border border-border bg-bg-secondary px-4 py-2 text-text;
+@layer utilities {
+	.btn {
+		@apply rounded-md bg-primary px-4 py-2 font-semibold text-white transition-colors duration-300 ease-in-out;
+		@apply hover:bg-secondary;
+		@apply active:bg-secondary disabled:cursor-not-allowed disabled:opacity-50;
+	}
 }
