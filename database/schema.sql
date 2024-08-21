@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS images (
     filename TEXT NOT NULL,
     title TEXT,
     description TEXT,
+    hash TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS tags (

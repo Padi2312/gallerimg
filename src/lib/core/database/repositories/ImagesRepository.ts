@@ -38,6 +38,11 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         });
     }
 
+    findByHash(hash: string): ImageModel | null {
+        const query = 'SELECT * FROM images WHERE hash = ?';
+        return this.db.get<ImageModel>(query, [hash]) || null
+    }
+
     findByFilename(filename: string): ImageModel | null {
         const query = 'SELECT * FROM images WHERE filename = ?';
         return this.db.get<ImageModel>(query, [filename]) || null;

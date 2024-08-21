@@ -2,6 +2,7 @@
 export interface ImageModel {
     id: number;
     filename: string;
+    hash: string;
     title?: string;
     description?: string;
     created_at?: string;

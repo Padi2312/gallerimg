@@ -4,6 +4,7 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { imagesRepository } from "../database/repositories";
 import { logger } from '$lib';
+import { createHash } from '$lib/utils';
 
 const IMAGE_FOLDER = "data/images";
 
@@ -18,20 +19,40 @@ export const initImages = async () => {
 
 export const getImagePath = (filename: string): string => path.join(IMAGE_FOLDER, filename)
 
-export const getImageAmount = (): number => {
+export const getImageCount = (): number => {
     return imagesRepository.count()
+}
+
+export const getUsedStorage = async (): Promise<number> => {
+    const files = await fs.readdir(IMAGE_FOLDER);
+    const filePaths = files.map(file => path.join(IMAGE_FOLDER, file));
+    let totalBytes = 0
+    for (const file of filePaths) {
+        const bunFile = Bun.file(file)
+        totalBytes += bunFile.size
+    }
+    return totalBytes
 }
 
 export const saveImage = async (file: File): Promise<string> => {
     try {
         const buffer = Buffer.from(await file.arrayBuffer());
+        const hash = createHash(buffer);
+        // Check if the image already exists in the database
+        // If it does, return the path to the image
+        const image = imagesRepository.findByHash(hash)
+        if (image !== null) {
+            return getImagePath(image.filename)
+        }
+
         const fileName = crypto.randomUUID() + path.extname(file.name); // Random file name with original extension
         const filePath = getImagePath(fileName);
 
         await fs.writeFile(filePath, buffer)
 
         imagesRepository.create({
-            filename: fileName
+            filename: fileName,
+            hash,
         })
         return filePath
     } catch (error) {

@@ -15,6 +15,10 @@
 			value={data.imageCount}
 		/>
 		<DashboardCard title="Total Tags" description="Total number of created tags" value={'N/A'} />
-		<DashboardCard title="Storage Usage" description="Amount of storage being used" value={'N/A'} />
+		<DashboardCard
+			title="Used Storage"
+			description="Amount of storage being used"
+			value={data.usedStorage}
+		/>
 	</div>
 </div>
