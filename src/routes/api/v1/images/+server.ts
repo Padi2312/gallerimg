@@ -1,7 +1,7 @@
 import { deleteImage, saveImage } from "$lib/core/images";
 import { json } from "@sveltejs/kit";
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request }) => {

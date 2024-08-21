@@ -1,7 +1,7 @@
 import type { ImageDto } from '$lib/types';
 import * as crypto from 'crypto';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import { imagesRepository } from "../database/repositories";
 import { logger } from '$lib';
 

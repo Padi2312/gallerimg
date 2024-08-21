@@ -1,9 +1,6 @@
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { deleteImage, loadImage } from '$lib/core/images';
 import sharp from 'sharp';
 import type { RequestHandler } from './$types';
-import { deleteImage, loadImage } from '$lib/core/images';
-
 
 export const GET: RequestHandler = async ({ params, url }) => {
     const id = params.id as string;
