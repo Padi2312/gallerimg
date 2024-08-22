@@ -1,8 +1,8 @@
 import { building } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { logger } from "$lib";
-import { database } from "$lib/core";
-import { initImages } from "$lib/core/images";
+import { database } from "$lib/server/core";
+import { initImages } from "$lib/server/core/images";
 export { handle } from "./auth"
 
 

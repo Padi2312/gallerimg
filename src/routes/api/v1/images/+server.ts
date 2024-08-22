@@ -1,4 +1,4 @@
-import { deleteImage, saveImage } from "$lib/core/images";
+import { deleteImage, saveImage } from "$lib/server/core/images";
 import { errorResponse } from "$lib/server/utils";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";

@@ -1,4 +1,4 @@
-import { database } from "$lib/core";
+import { database } from "$lib/server/core";
 import { ImagesRepository } from "./ImagesRepository";
 import { ImageTagsRepository } from "./ImageTagRepository";
 import { TagsRepository } from "./TagsRepository";

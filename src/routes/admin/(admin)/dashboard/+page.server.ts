@@ -1,4 +1,4 @@
-import { getImageCount, getUsedStorage } from "$lib/core/images";
+import { getImageCount, getUsedStorage } from "$lib/server/core/images";
 import { formatBytes } from "$lib/utils";
 import type { PageServerLoad } from "./$types";
 

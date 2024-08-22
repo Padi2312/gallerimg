@@ -1,4 +1,4 @@
-import { deleteImage, loadImage } from '$lib/core/images';
+import { deleteImage, loadImage } from '$lib/server/core/images';
 import { errorResponse } from '$lib/server/utils';
 import sharp from 'sharp';
 import type { RequestHandler } from './$types';

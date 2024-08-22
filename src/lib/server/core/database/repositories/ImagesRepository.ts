@@ -1,6 +1,6 @@
 import type Database from "../database";
 import { BaseRepository } from "../repository";
-import type { ImageModel } from "../../../types/databaseTypes";
+import type { ImageModel } from "../../../../types/databaseTypes";
 import type { ImageTagsRepository } from "./ImageTagRepository";
 import type { TagsRepository } from "./TagsRepository";
 
