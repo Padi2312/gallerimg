@@ -25,6 +25,8 @@ COPY --from=dependencies /app/node_modules ./node_modules
 
 ENV NODE_ENV=production
 ENV BODY_SIZE_LIMIT=Infinity
+# We need to set the trust proxy to true to make sure that the application works behind a reverse proxy
+ENV AUTH_TRUST_HOST=true
 
 EXPOSE 3000
 CMD ["--bun","./build/index.js"]

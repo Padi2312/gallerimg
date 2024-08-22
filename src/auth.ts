@@ -11,7 +11,7 @@ const providers: Provider[] = [
             username: {},
             password: {},
         },
-        authorize: (credentials, request: Request) => {
+        authorize: (credentials) => {
             if (credentials.username === (env.ADMIN_USERNAME ?? "admin")
                 && credentials.password === (env.ADMIN_PASSWORD ?? "admin")) {
                 return {

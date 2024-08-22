@@ -7,7 +7,12 @@
 	let password = $state('');
 
 	const submit = async () => {
-		await signIn('credentials', { username, password });
+		const response = await signIn('credentials', {
+			username,
+			password,
+			callbackUrl: '/admin/dashboard',
+		});
+		console.log(response);
 	};
 </script>
 
