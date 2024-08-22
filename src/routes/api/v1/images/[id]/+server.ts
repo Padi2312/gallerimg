@@ -1,6 +1,7 @@
 import { deleteImage, loadImage } from '$lib/core/images';
 import sharp from 'sharp';
 import type { RequestHandler } from './$types';
+import { redirect } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params, url }) => {
     const id = params.id as string;
@@ -44,7 +45,13 @@ export const GET: RequestHandler = async ({ params, url }) => {
     }
 };
 
-export const DELETE: RequestHandler = async ({ params }) => {
+export const DELETE: RequestHandler = async ({ params,locals}) => {
+    const session = await locals.auth();
+    if (!session) {
+        throw redirect(302, "/");
+    }
+
+
     const id = Number(params.id);
     if (isNaN(id)) {
         return new Response(JSON.stringify({ error: 'Invalid ID' }), {
