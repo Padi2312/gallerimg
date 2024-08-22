@@ -54,7 +54,7 @@
 					name="password"
 					required
 					type="password"
-					onkeydown={(e) => e.key === 'Enter' && submit()}
+					onkeydown={async (e) => e.key === 'Enter' && (await submit())}
 					bind:value={password}
 					tabindex="0"
 				/>
@@ -63,7 +63,7 @@
 		<div class="flex items-center p-6">
 			<button
 				class="inline-flex h-10 w-full items-center justify-center whitespace-nowrap text-sm font-medium"
-				onclick={submit}
+				onclick={async () => await submit()}
 				tabindex="0"
 			>
 				Sign In

@@ -1,13 +1,12 @@
 import { deleteImage, saveImage } from "$lib/core/images";
-import { json, redirect } from "@sveltejs/kit";
-import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
+import { errorResponse } from "$lib/server/utils";
+import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request, locals }) => {
     const session = await locals.auth();
     if (!session) {
-        throw redirect(302, "/");
+        return errorResponse(401, 'Unauthorized');
     }
 
     const data = await request.formData();
@@ -28,28 +27,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     return json({ success: true, files: uploadedFiles, failed: failedFiles })
 }
 
-// export const GET: RequestHandler = async ({ params }) => {
-//     // Get all images in the images directory
-//     const uploadDir = "images"
-//     const files = await fs.readdir(uploadDir);
-//     const images = files.map(file => {
-//         const fileNameOnly = path.parse(file).name
-//         return {
-//             id: fileNameOnly,
-//             url: `/api/v1/images/${file}`,
-//             title: file,
-//             tags: [],
-//             uploadDate: new Date().toISOString()
-//         }
-//     })
-//     return json(images)
-// }
-
-export const DELETE: RequestHandler = async ({ request,locals }) => {
-     const session = await locals.auth();
+export const DELETE: RequestHandler = async ({ request, locals }) => {
+    const session = await locals.auth();
     if (!session) {
-        throw redirect(302, "/");
-    }   
+        return errorResponse(401, 'Unauthorized');
+    }
 
     const body = await request.json()
     const ids = body.ids as number[]

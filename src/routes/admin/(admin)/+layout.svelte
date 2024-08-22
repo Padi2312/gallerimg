@@ -1,6 +1,7 @@
 <script>
 	import Header from '$lib/components/Header.svelte';
-	import { faCog, faHome, faImage, faTags } from '@fortawesome/free-solid-svg-icons';
+	import { signOut } from '@auth/sveltekit/client';
+	import { faCog, faHome, faImage, faSignOut, faTags } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	let { children } = $props();
@@ -11,39 +12,46 @@
 	};
 </script>
 
-<div class="flex min-h-screen w-full flex-col bg-muted/40">
+<div class="bg-muted/40 flex min-h-screen w-full flex-col">
 	<Header showToggleSidebar={true} {toggleSidebar} />
 	<div class="flex flex-1 flex-col lg:flex-row">
-		<aside class="hidden border-r border-border bg-muted/40 lg:block" class:hidden={!showSidebar}>
+		<aside class="bg-muted/40 hidden border-r border-border lg:block" class:hidden={!showSidebar}>
 			<div class="flex h-full max-h-screen flex-col gap-2">
 				<nav class="grid items-start p-2 px-4 font-medium">
 					<a
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
 						href="/admin/dashboard"
 					>
 						<Fa icon={faHome} />
 						Dashboard
 					</a>
 					<a
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
 						href="/admin/photos"
 					>
 						<Fa icon={faImage} />
 						Photos
 					</a>
 					<a
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
 						href="/admin/tags"
 					>
 						<Fa icon={faTags} />
 						Tags</a
 					>
 					<a
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
 						href="/admin/settings"
 					>
 						<Fa icon={faCog} />
 						Settings</a
+					>
+					<button
+						class="text-muted-foreground mt-4 flex items-center gap-3 rounded-lg bg-transparent px-3 py-2 transition-all hover:text-primary"
+						onclick={() => signOut({ callbackUrl: '/' })}
+					>
+						<Fa icon={faSignOut} />
+						Logout</button
 					>
 				</nav>
 			</div>

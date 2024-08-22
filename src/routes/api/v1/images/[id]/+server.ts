@@ -1,7 +1,7 @@
 import { deleteImage, loadImage } from '$lib/core/images';
+import { errorResponse } from '$lib/server/utils';
 import sharp from 'sharp';
 import type { RequestHandler } from './$types';
-import { redirect } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params, url }) => {
     const id = params.id as string;
@@ -45,10 +45,10 @@ export const GET: RequestHandler = async ({ params, url }) => {
     }
 };
 
-export const DELETE: RequestHandler = async ({ params,locals}) => {
+export const DELETE: RequestHandler = async ({ params, locals }) => {
     const session = await locals.auth();
     if (!session) {
-        throw redirect(302, "/");
+        return errorResponse(401, 'Unauthorized');
     }
 
 
