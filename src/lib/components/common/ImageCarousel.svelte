@@ -47,6 +47,7 @@
 
 <style>
 	.embla {
+		@apply relative;
 		overflow: hidden;
 	}
 	.embla__container {
@@ -57,7 +58,7 @@
 		min-width: 0;
 	}
 	.embla__btn {
-		@apply bg-gray-400/40 text-text hover:bg-gray-400;
+		@apply bg-gray-600/50 text-text hover:bg-gray-400;
 	}
 	.embla__prev {
 		position: absolute;
