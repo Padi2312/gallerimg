@@ -26,6 +26,7 @@ const providers: Provider[] = [
 ]
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
+    useSecureCookies: env.NODE_ENV === 'production',
     trustHost: true,
     providers: providers,
     secret: env.AUTH_SECRET ?? crypto.randomBytes(32).toString('base64'),
