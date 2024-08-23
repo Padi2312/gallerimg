@@ -19,7 +19,7 @@
     "@sveltejs/adapter-auto": "^3.2.4",
     "@sveltejs/adapter-node": "^5.2.2",
     "@sveltejs/kit": "^2.5.24",
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@types/better-sqlite3": "^7.6.11",
     "@types/bun": "^1.1.6",
     "@types/eslint": "^9.6.0",
@@ -33,9 +33,9 @@
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.6",
     "prettier-plugin-tailwindcss": "^0.6.6",
-    "svelte": "^5.0.0-next.231",
+    "svelte": "^5.0.0-next.236",
     "svelte-adapter-bun": "^0.5.2",
-    "svelte-check": "^3.8.5",
+    "svelte-check": "^3.8.6",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0",
@@ -51,9 +51,11 @@
     "svelte-preprocess"
   ],
   "dependencies": {
-    "svelte-fa": "^4.0.2",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@auth/sveltekit": "^1.4.2",
-    "sharp": "^0.33.5"
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "embla-carousel-autoplay": "^8.2.0",
+    "embla-carousel-svelte": "^8.2.0",
+    "sharp": "^0.33.5",
+    "svelte-fa": "^4.0.2"
   }
 }
