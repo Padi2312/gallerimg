@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="inline-flex w-fit items-center whitespace-nowrap rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-text"
+	class="inline-flex w-fit items-center whitespace-nowrap rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-text shadow"
 >
 	{@render children()}
 	{#if onDelete}

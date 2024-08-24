@@ -40,7 +40,7 @@
 	<div class="embla__container">
 		{#each images as image}
 			<div class="embla__slide">
-				<Image {image} height={800} />
+				<Image {image} height={800} displayActions={false} />
 			</div>
 		{/each}
 	</div>

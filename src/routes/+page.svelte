@@ -16,7 +16,7 @@
 <div class="relative flex justify-center px-4">
 	<div class="flex w-full max-w-3xl flex-col items-center space-y-4 overflow-hidden">
 		{#each images as image (image.id)}
-			<Image {image} width={800} />
+			<Image {image} width={800} showTags />
 		{/each}
 	</div>
 </div>
