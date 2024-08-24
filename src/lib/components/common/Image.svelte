@@ -70,6 +70,7 @@
 			href="{image.url}?download=true"
 			class="btn btn-overlay"
 			onclick={(e) => e.stopImmediatePropagation()}
+			download
 		>
 			<Fa icon={faDownload} size="xs" />
 		</a>
