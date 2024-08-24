@@ -2,7 +2,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { SvelteSet } from 'svelte/reactivity';
 	import type { ImageDto } from '../../types';
-	import Tag from '../Tag.svelte';
+	import Tag from '../common/Tag.svelte';
 	import Checkbox from '../common/Checkbox.svelte';
 	import LoadingSpinner from '../common/LoadingSpinner.svelte';
 	import EditModal from './EditModal.svelte';
@@ -49,8 +49,8 @@
 	}
 
 	const onClickEdit = (image: ImageDto) => {
-		showEditModal = true;
 		currentImage = image;
+		showEditModal = true;
 	};
 
 	const onCloseEdit = () => {

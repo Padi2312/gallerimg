@@ -1,10 +1,10 @@
+import { logger } from '$lib';
 import type { ImageDto } from '$lib/types';
+import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { imagesRepository } from "../database/repositories";
-import { logger } from '$lib';
-import { createHash } from '$lib/utils';
+import { imagesRepository, imageTagsRepository, tagsRepository } from "../database/repositories";
 
 const IMAGE_FOLDER = "data/images";
 
@@ -77,13 +77,43 @@ export const deleteImage = async (id: number): Promise<void> => {
 }
 
 export const getAllImages = (): ImageDto[] => {
-    return imagesRepository.findAll().map(image => {
-        return {
-            id: image.id,
+    return imagesRepository.findAllWithTags().map(image => {
+        const imgDto: ImageDto = {
+            id: image.id!.toString(),
             url: `/api/v1/files/${image.filename}`,
             title: image.filename,
-            tags: [] as string[],
-            createdAt: image.created_at
-        } as unknown as ImageDto
+            tags: image.tags,
+            createdAt: image.created_at!
+        }
+        return imgDto
     })
+}
+
+export const updateImage = (id: number, data: Partial<ImageDto>): ImageDto => {
+    let image = imagesRepository.findById(id)
+    if (image === null) {
+        throw new Error('Image not found')
+    }
+
+    if (data.tags && data.tags.length > 0) {
+        for (const tag of data.tags) {
+            const id = tagsRepository.create({ name: tag })
+            if (id === null) {
+                throw new Error('Failed to create tag')
+            }
+
+            const success = imageTagsRepository.addTagToImage(image.id, id)
+            if (!success) {
+                throw new Error('Failed to associate tag with image')
+            }
+        }
+
+    }
+    return {
+        id: image.id,
+        url: `/api/v1/files/${image.filename}`,
+        title: data.title ?? image.filename,
+        tags: [] as string[],
+        createdAt: image.created_at
+    } as unknown as ImageDto
 }

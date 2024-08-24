@@ -48,6 +48,22 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         return this.db.get<ImageModel>(query, [filename]) || null;
     }
 
+    findAllWithTags(): (ImageModel & { tags: string[] })[] {
+        const query = `
+            SELECT i.*, GROUP_CONCAT(t.name) as tags
+            FROM images i
+            LEFT JOIN image_tags it ON i.id = it.image_id
+            LEFT JOIN tags t ON it.tag_id = t.id
+            GROUP BY i.id
+        `;
+        const results = this.db.all<ImageModel & { tags: string }>(query);
+        if (!results) return [];
+        return results.map(row => ({
+            ...row,
+            tags: row.tags ? row.tags.split(",") : []
+        }));
+    }
+
     getImageWithTags(imageId: number): ImageModel & { tags: string[] } | null {
         const query = `
             SELECT i.*, GROUP_CONCAT(t.name) as tags

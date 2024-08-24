@@ -2,6 +2,8 @@
 	import type { ImageDto } from '$lib/types';
 	import { faClose } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import TagInput from '../common/TagInput.svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	type EditModalProps = {
 		show?: boolean;
@@ -13,7 +15,7 @@
 
 	// State variables using Svelte 5's $state
 	let title = $state(image.title);
-	let tags = $state(image.tags.join(', '));
+	let tags: string[] = $state(image.tags);
 	let description = $state('');
 
 	// Close function
@@ -30,10 +32,22 @@
 	}
 
 	// Save changes function
-	function handleSave() {
-		console.log('Image Details:', { title, tags, description });
-		close();
-	}
+	const handleSave = async () => {
+		const response = await fetch(`/api/v1/images/${image.id}`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ title, tags, description })
+		});
+
+		if (!response.ok) {
+			console.error('Failed to save changes');
+		} else {
+			invalidateAll();
+			close();
+		}
+	};
 </script>
 
 {#if show}
@@ -64,14 +78,7 @@
 			</div>
 			<div class="mb-4">
 				<label for="tags" class="mb-2 block text-sm font-medium">Tags</label>
-				<input
-					id="tags"
-					name="tags"
-					type="text"
-					class="w-full"
-					bind:value={tags}
-					placeholder="Enter tags separated by commas"
-				/>
+				<TagInput bind:tags />
 			</div>
 			<!-- <div class="mb-4">
 				<label for="description" class="block text-sm font-medium">Description</label>

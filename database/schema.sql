@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS images (
 );
 CREATE TABLE IF NOT EXISTS tags (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    CONSTRAINT name_unique UNIQUE (name)
 );
 CREATE TABLE IF NOT EXISTS image_tags (
     image_id INTEGER,
@@ -18,13 +19,10 @@ CREATE TABLE IF NOT EXISTS image_tags (
     FOREIGN KEY (tag_id) REFERENCES tags(id),
     PRIMARY KEY (image_id, tag_id)
 );
-
 -- Check if the column exists
 PRAGMA table_info(images);
-
 -- Add the column if it doesn't exist
 BEGIN TRANSACTION;
-
 -- Create a new table with the desired structure
 CREATE TABLE IF NOT EXISTS images_new (
     id INTEGER PRIMARY KEY,
@@ -35,15 +33,28 @@ CREATE TABLE IF NOT EXISTS images_new (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     download_count INTEGER DEFAULT 0
 );
-
 -- Copy data from the old table to the new one
-INSERT INTO images_new (id, filename, title, description, hash, created_at)
-SELECT id, filename, title, description, hash, created_at FROM images;
-
+INSERT INTO images_new (
+        id,
+        filename,
+        title,
+        description,
+        hash,
+        created_at
+    )
+SELECT id,
+    filename,
+    title,
+    description,
+    hash,
+    created_at
+FROM images;
 -- Drop the old table
 DROP TABLE images;
-
 -- Rename the new table to the original name
-ALTER TABLE images_new RENAME TO images;
-
+ALTER TABLE images_new
+    RENAME TO images;
 COMMIT;
+
+--- Create a unique index on the tags table for the name column
+CREATE UNIQUE INDEX IF NOT EXISTS name_unique ON tags(name);
