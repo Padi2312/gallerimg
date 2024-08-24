@@ -61,4 +61,9 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         if (!result) return null;
         return { ...result, tags: result.tags ? result.tags.split(',') : [] };
     }
+
+    incrementDownloadCountByFileName(filename: string): boolean {
+        const query = 'UPDATE images SET download_count = download_count + 1 WHERE filename = ?';
+        return this.db.run(query, [filename]) !== undefined;
+    }
 }

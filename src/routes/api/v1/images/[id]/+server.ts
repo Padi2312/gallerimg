@@ -1,52 +1,6 @@
-import { deleteImage, loadImage } from '$lib/server/core/images';
+import { deleteImage } from '$lib/server/core/images';
 import { errorResponse } from '$lib/server/utils';
-import sharp from 'sharp';
 import type { RequestHandler } from './$types';
-
-export const GET: RequestHandler = async ({ params, url }) => {
-    const id = params.id as string;
-    const width = url.searchParams.get('width');
-    const height = url.searchParams.get('height');
-    const download = url.searchParams.get('download');
-
-    let headers: HeadersInit = {
-        'Content-Type': 'image/jpeg',
-    }
-    if (download == "true") {
-        headers['Content-Disposition'] = `attachment; filename="${id}"`;
-    }
-    try {
-        const imageBuffer = await loadImage(id);
-        const resizedImageBuffer = sharp(imageBuffer)
-
-        if (!width && !height) {
-            return new Response(imageBuffer, {
-                headers
-            });
-        }
-
-        if (width && !height) {
-            resizedImageBuffer.resize(parseInt(width));
-        }
-        else if (!width && height) {
-            resizedImageBuffer.resize(null, parseInt(height));
-        }
-        else {
-            resizedImageBuffer.resize(parseInt(width!), parseInt(height!));
-        }
-
-        return new Response(await resizedImageBuffer.toBuffer(), {
-            headers
-        });
-    } catch (error) {
-        return new Response(JSON.stringify({ error: 'Image not found' }), {
-            status: 404,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-    }
-};
 
 export const DELETE: RequestHandler = async ({ params, locals }) => {
     const session = await locals.auth();

@@ -80,7 +80,7 @@ export const getAllImages = (): ImageDto[] => {
     return imagesRepository.findAll().map(image => {
         return {
             id: image.id,
-            url: `/api/v1/images/${image.filename}`,
+            url: `/api/v1/files/${image.filename}`,
             title: image.filename,
             tags: [] as string[],
             createdAt: image.created_at

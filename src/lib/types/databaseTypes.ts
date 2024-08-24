@@ -5,6 +5,7 @@ export interface ImageModel {
     hash: string;
     title?: string;
     description?: string;
+    download_count: number;
     created_at?: string;
 }
 
