@@ -4,6 +4,7 @@
 	import Autoplay from 'embla-carousel-autoplay';
 	import emblaCarouselSvelte from 'embla-carousel-svelte';
 	import Fa from 'svelte-fa';
+	import Image from './Image.svelte';
 
 	type CarouselProps = {
 		images: ImageDto[];
@@ -31,10 +32,16 @@
 	};
 </script>
 
-<div class="embla" use:emblaCarouselSvelte={{ plugins: plugins }} onemblaInit={onInit}>
+<div
+	class="embla"
+	use:emblaCarouselSvelte={{ options: { loop: true }, plugins: plugins }}
+	onemblaInit={onInit}
+>
 	<div class="embla__container">
 		{#each images as image}
-			<img class="embla__slide" src={image.url + '?height=800'} alt={image.title} />
+			<div class="embla__slide">
+				<Image {image} height={800} />
+			</div>
 		{/each}
 	</div>
 	<button class="embla__prev embla__btn" onclick={scrollPrev}>
@@ -45,20 +52,22 @@
 	</button>
 </div>
 
-<style>
+<style lang="postcss">
 	.embla {
-		@apply relative;
-		overflow: hidden;
+		@apply relative max-w-full overflow-hidden;
 	}
 	.embla__container {
-		display: flex;
+		@apply flex max-w-full;
 	}
 	.embla__slide {
+		@apply object-contain;
+		@apply flex items-center justify-center;
+		@apply min-h-96;
 		flex: 0 0 100%;
 		min-width: 0;
 	}
 	.embla__btn {
-		@apply bg-gray-600/50 text-text hover:bg-gray-400;
+		@apply z-10 bg-gray-600/50 text-text hover:bg-gray-400;
 	}
 	.embla__prev {
 		position: absolute;

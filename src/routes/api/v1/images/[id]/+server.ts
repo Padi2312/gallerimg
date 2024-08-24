@@ -7,16 +7,21 @@ export const GET: RequestHandler = async ({ params, url }) => {
     const id = params.id as string;
     const width = url.searchParams.get('width');
     const height = url.searchParams.get('height');
+    const download = url.searchParams.get('download');
 
+    let headers: HeadersInit = {
+        'Content-Type': 'image/jpeg',
+    }
+    if (download == "true") {
+        headers['Content-Disposition'] = `attachment; filename="${id}"`;
+    }
     try {
         const imageBuffer = await loadImage(id);
         const resizedImageBuffer = sharp(imageBuffer)
 
         if (!width && !height) {
             return new Response(imageBuffer, {
-                headers: {
-                    'Content-Type': 'image/jpeg', // Replace with the appropriate content type for your images
-                },
+                headers
             });
         }
 
@@ -31,9 +36,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
         }
 
         return new Response(await resizedImageBuffer.toBuffer(), {
-            headers: {
-                'Content-Type': 'image/jpeg', // Replace with the appropriate content type for your images
-            },
+            headers
         });
     } catch (error) {
         return new Response(JSON.stringify({ error: 'Image not found' }), {
