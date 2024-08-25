@@ -101,22 +101,20 @@ export const updateImage = (id: number, data: Partial<ImageDto>): ImageDto => {
     const tagsToRemove = existingTags.filter(tag => !data.tags?.includes(tag.name));
     const tagsToAdd = data.tags?.filter(tag => !existingTags.map(it => it.name).includes(tag)) ?? []
 
-    if (data.tags && data.tags.length > 0) {
-        for (const tag of tagsToRemove) {
-            const tagId = tag?.id
-            const success = imageTagsRepository.removeTagFromImage(image.id, tagId);
-            if (!success) {
-                throw new Error(`Failed to remove tag '${tag}' from image`);
-            }
+    for (const tag of tagsToRemove) {
+        const tagId = tag?.id
+        const success = imageTagsRepository.removeTagFromImage(image.id, tagId);
+        if (!success) {
+            throw new Error(`Failed to remove tag '${tag}' from image`);
         }
+    }
 
-        // Find tags to add (new tags that are not in the existing list)
-        for (const tag of tagsToAdd) {
-            const tagId = insertTagIfNotExists(tag);
-            const success = imageTagsRepository.addTagToImage(image.id, tagId);
-            if (!success) {
-                throw new Error(`Failed to associate tag '${tag}' with image`);
-            }
+    // Find tags to add (new tags that are not in the existing list)
+    for (const tag of tagsToAdd) {
+        const tagId = insertTagIfNotExists(tag);
+        const success = imageTagsRepository.addTagToImage(image.id, tagId);
+        if (!success) {
+            throw new Error(`Failed to associate tag '${tag}' with image`);
         }
     }
 

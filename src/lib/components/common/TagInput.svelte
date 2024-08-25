@@ -8,16 +8,20 @@
 	let showDropdown = $state(true);
 	let suggestions: string[] = $state([]);
 	let filteredSuggestions: string[] = $state([]);
+	let selectedIndex = $state(-1);
 
 	$effect(() => {
 		fetchAllTags();
 	});
 
 	$effect(() => {
-		filteredSuggestions = suggestions.filter(
-			(suggestion) =>
-				suggestion.toLowerCase().includes(newTag.toLowerCase()) && !tags.includes(suggestion)
-		);
+		filteredSuggestions = suggestions
+			.filter(
+				(suggestion) =>
+					suggestion.toLowerCase().includes(newTag.toLowerCase()) && !tags.includes(suggestion)
+			)
+			.slice(0, 10); // Limit suggestions to 10 items for better performance
+		selectedIndex = -1; // Reset the selected index when the suggestions change
 	});
 
 	const fetchAllTags = async () => {
@@ -32,14 +36,27 @@
 	};
 
 	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === ',' || e.key === 'Enter') {
-			e.preventDefault();
-			addTag(newTag);
-		} else if (e.key === 'Enter' && showDropdown && filteredSuggestions.length > 0) {
-			e.preventDefault();
-			addTag(filteredSuggestions[0]);
-		} else if (e.key === 'Escape' && showDropdown) {
-			showDropdown = false;
+		e.preventDefault();
+		switch (e.key) {
+			case ',':
+			case 'Enter':
+				addTag(filteredSuggestions[selectedIndex] || newTag);
+				break;
+			case 'ArrowDown':
+				if (filteredSuggestions.length > 0) {
+					selectedIndex = (selectedIndex + 1) % filteredSuggestions.length;
+				}
+				break;
+			case 'ArrowUp':
+				if (filteredSuggestions.length > 0) {
+					selectedIndex =
+						(selectedIndex - 1 + filteredSuggestions.length) % filteredSuggestions.length;
+				}
+				break;
+			case 'Escape':
+			default:
+				showDropdown = false;
+				break;
 		}
 	};
 
@@ -51,6 +68,13 @@
 		setTimeout(() => {
 			showDropdown = false;
 		}, 200);
+	};
+
+	const handleOutsideClick = (e: MouseEvent) => {
+		const target = e.target as HTMLElement;
+		if (!target.closest('.tag-input-container')) {
+			showDropdown = false;
+		}
 	};
 
 	const addTag = (tag: string) => {
@@ -68,9 +92,11 @@
 	const handleSuggestionClick = (suggestion: string) => {
 		addTag(suggestion);
 	};
+
+	document.addEventListener('click', handleOutsideClick);
 </script>
 
-<div class="relative flex w-full flex-col space-y-2">
+<div class="tag-input-container relative flex w-full flex-col space-y-2">
 	<input
 		type="text"
 		placeholder="Add a tag..."
@@ -79,16 +105,15 @@
 		onkeydown={handleKeyDown}
 		oninput={handleInput}
 		onblur={handleBlur}
-		class="min-w-0 flex-1"
+		class="min-w-0 flex-1 rounded-md border p-2"
 	/>
 	{#if showDropdown && filteredSuggestions.length > 0}
-		<ul
-			class="absolute left-0 top-full z-10 max-h-60 w-full overflow-y-auto rounded-md border border-gray-300 bg-bg text-text shadow-lg"
-		>
-			{#each filteredSuggestions as suggestion}
+		<ul class="dropdown">
+			{#each filteredSuggestions as suggestion, index}
 				<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 				<li
-					class="cursor-pointer px-4 py-2 hover:bg-bg-secondary"
+					class:bg-bg-secondary={selectedIndex === index}
+					class="dropdown-item"
 					onmousedown={() => handleSuggestionClick(suggestion)}
 				>
 					{suggestion}
@@ -96,7 +121,7 @@
 			{/each}
 		</ul>
 	{/if}
-	<div>
+	<div class="flex flex-wrap">
 		{#each tags as tag, index}
 			<Tag onDelete={() => handleRemoveTag(index)}>
 				{tag}
@@ -104,3 +129,17 @@
 		{/each}
 	</div>
 </div>
+
+<style lang="postcss">
+	.dropdown {
+		@apply border-2 border-border bg-bg;
+		@apply max-h-60 overflow-y-auto;
+		@apply z-10 w-full rounded;
+	}
+
+	.dropdown-item {
+		@apply cursor-pointer p-2 px-4;
+		@apply hover:bg-bg-secondary;
+		@apply active:bg-bg-secondary;
+	}
+</style>
