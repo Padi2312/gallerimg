@@ -1,5 +1,5 @@
 import { logger } from '$lib';
-import { insertTagIfNotExists } from '$lib/server/tags';
+import { insertTagIfNotExists } from '$lib/server/core/tags';
 import type { ImageDto } from '$lib/types';
 import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';

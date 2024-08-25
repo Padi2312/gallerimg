@@ -1,4 +1,4 @@
-import { tagsRepository } from "../core/database/repositories"
+import { tagsRepository } from "../database/repositories"
 
 export const getAllTags = () => {
     const tags = tagsRepository.findAll()
