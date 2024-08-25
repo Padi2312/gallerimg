@@ -67,9 +67,9 @@
 	<ImageModal {image} onClose={() => (showEnlarged = false)} />
 {/if}
 <div class="flex flex-col">
-	<img data-src={url} alt={image.title} class="h-full w-full rounded" loading="lazy" />
+	<img data-src={url} alt={image.title} class="h-full w-full rounded-t" loading="lazy" />
 
-	<div class="flex items-center justify-between bg-bg-secondary px-2">
+	<div class="flex items-center justify-between bg-bg-secondary px-2 rounded-b">
 		{#if showTags}
 			<div class="">
 				{#each image.tags as tag}
@@ -95,20 +95,6 @@
 			</div>
 		{/if}
 	</div>
-	<!-- <div class="absolute bottom-1 right-1 z-10 flex space-x-2">
-		<a
-			href="{image.url}?download=true"
-			class="btn btn-overlay"
-			onclick={(e) => e.stopImmediatePropagation()}
-			download
-		>
-			<Fa icon={faDownload} size="xs" />
-		</a>
-
-		<button class="btn-overlay" onclick={openImageModal}>
-			<Fa icon={faExpand} size="xs" />
-		</button>
-	</div> -->
 </div>
 
 <style lang="postcss">
