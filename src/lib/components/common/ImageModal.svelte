@@ -34,15 +34,21 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
-		class="fixed inset-0 z-40 flex items-center justify-center bg-bg-overlay"
+		class="fixed inset-0 z-40 flex items-center justify-center bg-bg-overlay p-0 lg:p-4"
 		onclick={handleOutsideClick}
 	>
-		<div class="relative w-full rounded-lg bg-bg p-6 shadow-lg">
-			<button class="absolute right-1 top-0 bg-transparent !p-2 text-text" onclick={close}>
+		<div
+			class="relative max-h-screen w-auto max-w-full overflow-auto rounded-lg bg-bg p-2 shadow-lg"
+		>
+			<button class="absolute right-2 top-2 bg-transparent !p-1 text-text" onclick={close}>
 				<Fa icon={faClose} />
 			</button>
-			<div class="mb-4">
-				<img src={image.url} alt={image.title} class="w-full rounded-lg" />
+			<div class="flex items-center justify-center">
+				<img
+					src={image.url}
+					alt={image.title}
+					class="h-auto max-h-[80vh] w-auto max-w-full rounded-lg"
+				/>
 			</div>
 		</div>
 	</div>
