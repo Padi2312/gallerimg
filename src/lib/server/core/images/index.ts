@@ -1,10 +1,11 @@
 import { logger } from '$lib';
+import { insertTagIfNotExists } from '$lib/server/tags';
 import type { ImageDto } from '$lib/types';
 import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { imagesRepository, imageTagsRepository, tagsRepository } from "../database/repositories";
+import { imagesRepository, imageTagsRepository } from "../database/repositories";
 
 const IMAGE_FOLDER = "data/images";
 
@@ -90,30 +91,41 @@ export const getAllImages = (): ImageDto[] => {
 }
 
 export const updateImage = (id: number, data: Partial<ImageDto>): ImageDto => {
-    let image = imagesRepository.findById(id)
+    let image = imagesRepository.findById(id);
     if (image === null) {
-        throw new Error('Image not found')
+        throw new Error('Image not found');
     }
 
-    if (data.tags && data.tags.length > 0) {
-        for (const tag of data.tags) {
-            const id = tagsRepository.create({ name: tag })
-            if (id === null) {
-                throw new Error('Failed to create tag')
-            }
+    // Fetch existing tags for the image
+    const existingTags = imageTagsRepository.getTagsForImage(image.id)
+    const tagsToRemove = existingTags.filter(tag => !data.tags?.includes(tag.name));
+    const tagsToAdd = data.tags?.filter(tag => !existingTags.map(it => it.name).includes(tag)) ?? []
 
-            const success = imageTagsRepository.addTagToImage(image.id, id)
+    if (data.tags && data.tags.length > 0) {
+        for (const tag of tagsToRemove) {
+            const tagId = tag?.id
+            const success = imageTagsRepository.removeTagFromImage(image.id, tagId);
             if (!success) {
-                throw new Error('Failed to associate tag with image')
+                throw new Error(`Failed to remove tag '${tag}' from image`);
             }
         }
 
+        // Find tags to add (new tags that are not in the existing list)
+        for (const tag of tagsToAdd) {
+            const tagId = insertTagIfNotExists(tag);
+            const success = imageTagsRepository.addTagToImage(image.id, tagId);
+            if (!success) {
+                throw new Error(`Failed to associate tag '${tag}' with image`);
+            }
+        }
     }
+
+    // Return updated image data
     return {
         id: image.id,
         url: `/api/v1/files/${image.filename}`,
         title: data.title ?? image.filename,
-        tags: [] as string[],
-        createdAt: image.created_at
-    } as unknown as ImageDto
-}
+        tags: data.tags ?? existingTags,
+        createdAt: image.created_at,
+    } as unknown as ImageDto;
+};
