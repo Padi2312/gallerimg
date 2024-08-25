@@ -3,6 +3,7 @@ import { loadImage } from '$lib/server/core/images';
 import { errorResponse } from '$lib/server/utils';
 import sharp from 'sharp';
 import type { RequestHandler } from './$types';
+import { logger } from '$lib';
 
 export const GET: RequestHandler = async ({ params, url }) => {
     const filename = params.name as string;
@@ -40,6 +41,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
             headers
         });
     } catch (error) {
+        logger.error(error);
         return errorResponse(404, 'Image not found');
     } finally {
         if (download == "true") {

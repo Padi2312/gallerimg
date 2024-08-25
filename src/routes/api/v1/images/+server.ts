@@ -1,3 +1,4 @@
+import { logger } from "$lib";
 import { deleteImage, saveImage } from "$lib/server/core/images";
 import { errorResponse } from "$lib/server/utils";
 import { json } from "@sveltejs/kit";
@@ -41,6 +42,7 @@ export const DELETE: RequestHandler = async ({ request, locals }) => {
         }
         return new Response(null, { status: 204 })
     } catch (error) {
+        logger.error(error);
         return json({ success: false, error }, { status: 500 })
     }
 } 
