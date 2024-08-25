@@ -84,7 +84,8 @@ export const getAllImages = (): ImageDto[] => {
             url: `/api/v1/files/${image.filename}`,
             title: image.filename,
             tags: image.tags,
-            createdAt: image.created_at!
+            createdAt: image.created_at!,
+            downloadCount: image.download_count
         }
         return imgDto
     })
@@ -125,5 +126,6 @@ export const updateImage = (id: number, data: Partial<ImageDto>): ImageDto => {
         title: data.title ?? image.filename,
         tags: data.tags ?? existingTags,
         createdAt: image.created_at,
+        downloadCount: image.download_count
     } as unknown as ImageDto;
 };

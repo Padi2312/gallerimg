@@ -4,4 +4,5 @@ export interface ImageDto {
     title: string;
     tags: string[];
     createdAt: string;
+    downloadCount: number;
 }

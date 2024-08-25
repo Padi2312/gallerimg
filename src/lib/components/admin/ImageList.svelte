@@ -102,6 +102,7 @@
 					<th class="h-12 px-4 text-left align-middle font-medium">Title</th>
 					<th class="h-12 px-4 text-left align-middle font-medium">Tags</th>
 					<th class="h-12 px-4 text-left align-middle font-medium">Uploaded</th>
+					<th class="h-12 px-4 text-left align-middle font-medium">Downloads</th>
 					<th class="h-12 px-4 text-left align-middle font-medium">Edit</th>
 				</tr>
 			</thead>
@@ -134,6 +135,7 @@
 							</div>
 						</td>
 						<td class="p-4 align-middle">{image.createdAt}</td>
+						<td class="p-4 align-middle">{image.downloadCount}</td>
 						<td class="p-4 align-middle">
 							<button onclick={() => onClickEdit(image)}> Edit </button>
 							<!-- <a href={`/admin/photos/${image.id}`} class="text-primary">Edit</a> -->
