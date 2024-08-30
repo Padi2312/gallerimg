@@ -3,7 +3,7 @@
 	type TagInputProps = {
 		tags: string[];
 	};
-	let { tags = $bindable() }: TagInputProps = $props();
+	let { tags = $bindable([]) }: TagInputProps = $props();
 	let newTag = $state('');
 	let showDropdown = $state(true);
 	let suggestions: string[] = $state([]);
@@ -36,18 +36,20 @@
 	};
 
 	const handleKeyDown = (e: KeyboardEvent) => {
-		e.preventDefault();
 		switch (e.key) {
 			case ',':
 			case 'Enter':
+				e.preventDefault();
 				addTag(filteredSuggestions[selectedIndex] || newTag);
 				break;
 			case 'ArrowDown':
+				e.preventDefault();
 				if (filteredSuggestions.length > 0) {
 					selectedIndex = (selectedIndex + 1) % filteredSuggestions.length;
 				}
 				break;
 			case 'ArrowUp':
+				e.preventDefault();
 				if (filteredSuggestions.length > 0) {
 					selectedIndex =
 						(selectedIndex - 1 + filteredSuggestions.length) % filteredSuggestions.length;

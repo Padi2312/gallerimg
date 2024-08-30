@@ -7,15 +7,15 @@ export class TagsRepository extends BaseRepository<TagModel> {
         super(db, 'tags');
     }
 
-    findByName(name: string): TagModel | null {
-        const query = 'SELECT * FROM tags WHERE name = ?';
-        return this.db.get<TagModel>(query, [name]) || null;
+    async findByName(name: string): Promise<TagModel | null> {
+        const query = 'SELECT * FROM tags WHERE name = $1';
+        return await this.db.get<TagModel>(query, [name]) || null;
     }
 
-    getOrCreate(name: string): number {
-        const existingTag = this.findByName(name);
+    async getOrCreate(name: string): Promise<number> {
+        const existingTag = await this.findByName(name);
         if (existingTag) return existingTag.id;
-        const newTagId = this.create({ name });
+        const newTagId = await this.create({ name });
         if (newTagId === null) throw new Error(`Failed to create tag: ${name}`);
         return newTagId;
     }

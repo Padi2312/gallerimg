@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gallerimg
+      POSTGRES_PASSWORD: gallerimg
+      POSTGRES_DB: gallerimg
+    # volumes:
+    # - ./data/database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432

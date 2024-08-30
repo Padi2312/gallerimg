@@ -10,9 +10,8 @@
 		const response = await signIn('credentials', {
 			username,
 			password,
-			callbackUrl: '/admin/dashboard',
+			callbackUrl: '/admin/dashboard'
 		});
-		console.log(response);
 	};
 </script>
 

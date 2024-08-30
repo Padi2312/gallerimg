@@ -1,6 +1,6 @@
+import type { ImageModel } from "../../../../types/databaseTypes";
 import type Database from "../database";
 import { BaseRepository } from "../repository";
-import type { ImageModel } from "../../../../types/databaseTypes";
 import type { ImageTagsRepository } from "./ImageTagRepository";
 import type { TagsRepository } from "./TagsRepository";
 
@@ -14,17 +14,18 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         this.imageTagsRepo = imageTagsRepo;
     }
 
-    addImageWithTags(imageData: Omit<ImageModel, 'id' | 'created_at'>, tagNames: string[]): number | null {
-        return this.db.transaction(db => {
+    async addImageWithTags(imageData: Omit<ImageModel, 'id' | 'created_at'>, tagNames: string[]): Promise<number | null> {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return await this.db.transaction(async _ => {
             // Create the image
-            const imageId = this.create(imageData);
+            const imageId = await this.create(imageData);
             if (imageId === null) {
                 throw new Error('Failed to create image');
             }
 
             // Process each tag
             for (const tagName of tagNames) {
-                const tagId = this.tagsRepo.getOrCreate(tagName);
+                const tagId = await this.tagsRepo.getOrCreate(tagName);
                 if (tagId === null) {
                     throw new Error(`Failed to create or get tag: ${tagName}`);
                 }
@@ -38,48 +39,48 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         });
     }
 
-    findByHash(hash: string): ImageModel | null {
-        const query = 'SELECT * FROM images WHERE hash = ?';
-        return this.db.get<ImageModel>(query, [hash]) || null
+    async findByHash(hash: string): Promise<ImageModel | null> {
+        const query = 'SELECT * FROM images WHERE hash = $1';
+        return await this.db.get<ImageModel>(query, [hash]) || null
     }
 
-    findByFilename(filename: string): ImageModel | null {
+    async findByFilename(filename: string): Promise<ImageModel | null> {
         const query = 'SELECT * FROM images WHERE filename = ?';
-        return this.db.get<ImageModel>(query, [filename]) || null;
+        return await this.db.get<ImageModel>(query, [filename]) || null;
     }
 
-    findAllWithTags(): (ImageModel & { tags: string[] })[] {
+    async findAllWithTags(): Promise<(ImageModel & { tags: string[]; })[]> {
         const query = `
-            SELECT i.*, GROUP_CONCAT(t.name) as tags
+            SELECT i.*, array_remove(array_agg(t.name), NULL) as tags
             FROM images i
             LEFT JOIN image_tags it ON i.id = it.image_id
             LEFT JOIN tags t ON it.tag_id = t.id
             GROUP BY i.id
         `;
-        const results = this.db.all<ImageModel & { tags: string }>(query);
+        const results = await this.db.all<ImageModel & { tags: string[] }>(query);
         if (!results) return [];
         return results.map(row => ({
             ...row,
-            tags: row.tags ? row.tags.split(",") : []
+            tags: row.tags ?? []
         }));
     }
 
-    getImageWithTags(imageId: number): ImageModel & { tags: string[] } | null {
+    async getImageWithTags(imageId: number): Promise<(ImageModel & { tags: string[]; }) | null> {
         const query = `
-            SELECT i.*, GROUP_CONCAT(t.name) as tags
+            SELECT i.*, array_remove(array_agg(t.name), NULL) as tags
             FROM images i
             LEFT JOIN image_tags it ON i.id = it.image_id
             LEFT JOIN tags t ON it.tag_id = t.id
-            WHERE i.id = ?
+            WHERE i.id = $1
             GROUP BY i.id
         `;
-        const result = this.db.get<ImageModel & { tags: string }>(query, [imageId]);
+        const result = await this.db.get<ImageModel & { tags: string[] }>(query, [imageId]);
         if (!result) return null;
-        return { ...result, tags: result.tags ? result.tags.split(',') : [] };
+        return { ...result, tags: result.tags ?? [] };
     }
 
-    incrementDownloadCountByFileName(filename: string): boolean {
-        const query = 'UPDATE images SET download_count = download_count + 1 WHERE filename = ?';
-        return this.db.run(query, [filename]) !== undefined;
+    async incrementDownloadCountByFileName(filename: string): Promise<boolean> {
+        const query = 'UPDATE images SET download_count = download_count + 1 WHERE filename = $1';
+        return await this.db.run(query, [filename]) !== undefined;
     }
 }

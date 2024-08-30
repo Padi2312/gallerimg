@@ -22,6 +22,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
             const filePath = await saveImage(item)
             uploadedFiles.push(filePath);
         } catch (error) {
+            logger.error(error);
             failedFiles.push(item.name)
         }
     }

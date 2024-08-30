@@ -1,60 +1,31 @@
 CREATE TABLE IF NOT EXISTS images (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     filename TEXT NOT NULL,
     title TEXT,
     description TEXT,
     hash TEXT NOT NULL,
     download_count INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 CREATE TABLE IF NOT EXISTS tags (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     CONSTRAINT name_unique UNIQUE (name)
 );
+
+CREATE TABLE IF NOT EXISTS metadata (
+    id SERIAL PRIMARY KEY,
+    image_id INTEGER NOT NULL,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL,
+    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS image_tags (
     image_id INTEGER,
     tag_id INTEGER,
-    FOREIGN KEY (image_id) REFERENCES images(id),
-    FOREIGN KEY (tag_id) REFERENCES tags(id),
+    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (image_id, tag_id)
 );
--- Check if the column exists
-PRAGMA table_info(images);
--- Add the column if it doesn't exist
-BEGIN TRANSACTION;
--- Create a new table with the desired structure
-CREATE TABLE IF NOT EXISTS images_new (
-    id INTEGER PRIMARY KEY,
-    filename TEXT NOT NULL,
-    title TEXT,
-    description TEXT,
-    hash TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    download_count INTEGER DEFAULT 0
-);
--- Copy data from the old table to the new one
-INSERT INTO images_new (
-        id,
-        filename,
-        title,
-        description,
-        hash,
-        created_at
-    )
-SELECT id,
-    filename,
-    title,
-    description,
-    hash,
-    created_at
-FROM images;
--- Drop the old table
-DROP TABLE images;
--- Rename the new table to the original name
-ALTER TABLE images_new
-    RENAME TO images;
-COMMIT;
-
---- Create a unique index on the tags table for the name column
-CREATE UNIQUE INDEX IF NOT EXISTS name_unique ON tags(name);

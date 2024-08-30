@@ -1,41 +1,41 @@
+import type { ImageModel, ImageTagModel, TagModel } from "../../../../types/databaseTypes";
 import type Database from "../database";
 import { BaseRepository } from "../repository";
-import type { ImageModel, ImageTagModel, TagModel } from "../../../../types/databaseTypes";
 
 export class ImageTagsRepository extends BaseRepository<ImageTagModel> {
     constructor(db: Database) {
         super(db, 'image_tags');
     }
 
-    addTagToImage(imageId: number, tagId: number): boolean {
-        const query = 'INSERT OR IGNORE INTO image_tags (image_id, tag_id) VALUES (?, ?)';
-        const result = this.db.run(query, [imageId, tagId]);
-        return result !== undefined;
+    async addTagToImage(imageId: number, tagId: number): Promise<boolean> {
+        const query = 'INSERT INTO image_tags (image_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING';
+        const result = await this.db.run(query, [imageId, tagId]);
+        return (result.rowCount ?? 0) > 0;
     }
 
-    removeTagFromImage(imageId: number, tagId: number): boolean {
-        const query = 'DELETE FROM image_tags WHERE image_id = ? AND tag_id = ?';
-        const result = this.db.run(query, [imageId, tagId]);
-        return result !== undefined && result.changes > 0;
+    async removeTagFromImage(imageId: number, tagId: number): Promise<boolean> {
+        const query = 'DELETE FROM image_tags WHERE image_id = $1 AND tag_id = $2';
+        const result = await this.db.run(query, [imageId, tagId]);
+        return (result.rowCount ?? 0) > 0;
     }
 
-    getTagsForImage(imageId: number): TagModel[] {
+    async getTagsForImage(imageId: number): Promise<TagModel[]> {
         const query = `
             SELECT t.* 
             FROM tags t
             JOIN image_tags it ON t.id = it.tag_id
-            WHERE it.image_id = ?
+            WHERE it.image_id = $1
         `;
-        return this.db.all<TagModel>(query, [imageId]) || [];
+        return await this.db.all<TagModel>(query, [imageId]) || [];
     }
 
-    getImagesForTag(tagId: number): ImageModel[] {
+    async getImagesForTag(tagId: number): Promise<ImageModel[]> {
         const query = `
             SELECT i.* 
             FROM images i
             JOIN image_tags it ON i.id = it.image_id
-            WHERE it.tag_id = ?
+            WHERE it.tag_id = $1
         `;
-        return this.db.all<ImageModel>(query, [tagId]) || [];
+        return await this.db.all<ImageModel>(query, [tagId]) || [];
     }
 }

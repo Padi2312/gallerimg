@@ -16,7 +16,7 @@ export const PATCH: RequestHandler = async ({ request, params, locals }) => {
 
     const body = await request.json();
     try {
-        updateImage(id, body);
+        await updateImage(id, body);
         return new Response(null, {
             status: 204,
         });

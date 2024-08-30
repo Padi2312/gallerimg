@@ -10,29 +10,29 @@ export abstract class BaseRepository<T> {
         this.tableName = tableName;
     }
 
-    count(): number {
+    async count(): Promise<number> {
         const query = `SELECT COUNT(*) FROM ${this.tableName}`;
-        const result = this.db.get<{ 'COUNT(*)': number }>(query);
+        const result = await this.db.get<{ count: string }>(query);
         if (!result) {
             logger.warn(`No records found in ${this.tableName}`);
             return 0;
         }
-        return result['COUNT(*)'];
+        return parseInt(result.count, 10);
     }
 
-    findAll(): T[] {
+    async findAll(): Promise<T[]> {
         const query = `SELECT * FROM ${this.tableName}`;
-        const results = this.db.all<T>(query);
-        if (!results) {
+        const results = await this.db.all<T>(query);
+        if (!results || results.length === 0) {
             logger.warn(`No results found in ${this.tableName}`);
             return [];
         }
         return results;
     }
 
-    findById(id: number): T | null {
-        const query = `SELECT * FROM ${this.tableName} WHERE id = ?`;
-        const result = this.db.get<T>(query, [id]);
+    async findById(id: number): Promise<T | null> {
+        const query = `SELECT * FROM ${this.tableName} WHERE id = $1`;
+        const result = await this.db.get<T>(query, [id]);
         if (!result) {
             logger.warn(`No record found in ${this.tableName} with id ${id}`);
             return null;
@@ -40,39 +40,39 @@ export abstract class BaseRepository<T> {
         return result;
     }
 
-    create(data: Partial<T>): number | null {
+    async create(data: Partial<T>): Promise<number | null> {
         const keys = Object.keys(data);
         const values = Object.values(data);
-        const placeholders = keys.map(() => '?').join(', ');
-        const query = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders})`;
-        const result = this.db.run(query, values);
+        const placeholders = keys.map((_, i) => `$${i + 1}`).join(', ');
+        const query = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING id`;
+        const result = await this.db.get<{ id: number }>(query, values);
         if (!result) {
             logger.error(`Failed to insert into ${this.tableName}`);
             return null;
         }
-        return result.lastInsertRowid as number;
+        return result.id;
     }
 
-    update(id: number, data: Partial<T>): boolean {
+    async update(id: number, data: Partial<T>): Promise<boolean> {
         const keys = Object.keys(data);
         const values = Object.values(data);
-        const setClause = keys.map(key => `${key} = ?`).join(', ');
-        const query = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-        const result = this.db.run(query, [...values, id]);
+        const setClause = keys.map((key, i) => `${key} = $${i + 1}`).join(', ');
+        const query = `UPDATE ${this.tableName} SET ${setClause} WHERE id = $${keys.length + 1}`;
+        const result = await this.db.run(query, [...values, id]);
         if (!result) {
             logger.error(`Failed to update ${this.tableName} with id ${id}`);
             return false;
         }
-        return result.changes > 0;
+        return (result.rowCount ?? 0) > 0;
     }
 
-    delete(id: number): boolean {
-        const query = `DELETE FROM ${this.tableName} WHERE id = ?`;
-        const result = this.db.run(query, [id]);
+    async delete(id: number): Promise<boolean> {
+        const query = `DELETE FROM ${this.tableName} WHERE id = $1`;
+        const result = await this.db.run(query, [id]);
         if (!result) {
             logger.error(`Failed to delete from ${this.tableName} with id ${id}`);
             return false;
         }
-        return result.changes > 0;
+        return (result.rowCount ?? 0) > 0;
     }
 }

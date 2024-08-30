@@ -11,7 +11,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
     const height = url.searchParams.get('height');
     const download = url.searchParams.get('download');
 
-    let headers: HeadersInit = {
+    const headers: HeadersInit = {
         'Content-Type': 'image/jpeg',
     }
     if (download == "true") {

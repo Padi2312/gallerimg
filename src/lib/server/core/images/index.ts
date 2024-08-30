@@ -20,8 +20,8 @@ export const initImages = async () => {
 
 export const getImagePath = (filename: string): string => path.join(IMAGE_FOLDER, filename)
 
-export const getImageCount = (): number => {
-    return imagesRepository.count()
+export const getImageCount = async (): Promise<number> => {
+    return await imagesRepository.count()
 }
 
 export const getUsedStorage = async (): Promise<number> => {
@@ -36,30 +36,25 @@ export const getUsedStorage = async (): Promise<number> => {
 }
 
 export const saveImage = async (file: File): Promise<string> => {
-    try {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const hash = createHash(buffer);
-        // Check if the image already exists in the database
-        // If it does, return the path to the image
-        const image = imagesRepository.findByHash(hash)
-        if (image !== null) {
-            return getImagePath(image.filename)
-        }
-
-        const fileName = crypto.randomUUID() + path.extname(file.name); // Random file name with original extension
-        const filePath = getImagePath(fileName);
-
-        await fs.writeFile(filePath, buffer)
-
-        imagesRepository.create({
-            filename: fileName,
-            hash,
-        })
-        return filePath
-    } catch (error) {
-        throw error
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const hash = createHash(buffer);
+    // Check if the image already exists in the database
+    // If it does, return the path to the image
+    const image = await imagesRepository.findByHash(hash)
+    if (image !== null) {
+        return getImagePath(image.filename)
     }
 
+    const fileName = crypto.randomUUID() + path.extname(file.name); // Random file name with original extension
+    const filePath = getImagePath(fileName);
+
+    await fs.writeFile(filePath, buffer)
+
+    imagesRepository.create({
+        filename: fileName,
+        hash,
+    })
+    return filePath
 }
 
 export const loadImage = async (filename: string): Promise<Buffer> => {
@@ -68,7 +63,7 @@ export const loadImage = async (filename: string): Promise<Buffer> => {
 }
 
 export const deleteImage = async (id: number): Promise<void> => {
-    const image = imagesRepository.findById(id)
+    const image = await imagesRepository.findById(id)
     if (image === null) {
         throw new Error('Image not found')
     }
@@ -77,13 +72,13 @@ export const deleteImage = async (id: number): Promise<void> => {
     imagesRepository.delete(image.id)
 }
 
-export const getAllImages = (): ImageDto[] => {
-    return imagesRepository.findAllWithTags().map(image => {
+export const getAllImages = async (): Promise<ImageDto[]> => {
+    return (await imagesRepository.findAllWithTags()).map(image => {
         const imgDto: ImageDto = {
             id: image.id!.toString(),
             url: `/api/v1/files/${image.filename}`,
             title: image.filename,
-            tags: image.tags,
+            tags: image.tags ?? [],
             createdAt: image.created_at!,
             downloadCount: image.download_count
         }
@@ -91,14 +86,14 @@ export const getAllImages = (): ImageDto[] => {
     })
 }
 
-export const updateImage = (id: number, data: Partial<ImageDto>): ImageDto => {
-    let image = imagesRepository.findById(id);
+export const updateImage = async (id: number, data: Partial<ImageDto>): Promise<ImageDto> => {
+    const image = await imagesRepository.findById(id);
     if (image === null) {
         throw new Error('Image not found');
     }
 
     // Fetch existing tags for the image
-    const existingTags = imageTagsRepository.getTagsForImage(image.id)
+    const existingTags = await imageTagsRepository.getTagsForImage(image.id)
     const tagsToRemove = existingTags.filter(tag => !data.tags?.includes(tag.name));
     const tagsToAdd = data.tags?.filter(tag => !existingTags.map(it => it.name).includes(tag)) ?? []
 
@@ -112,8 +107,11 @@ export const updateImage = (id: number, data: Partial<ImageDto>): ImageDto => {
 
     // Find tags to add (new tags that are not in the existing list)
     for (const tag of tagsToAdd) {
-        const tagId = insertTagIfNotExists(tag);
-        const success = imageTagsRepository.addTagToImage(image.id, tagId);
+        const tagId = await insertTagIfNotExists(tag);
+        if (tagId === null) {
+            throw new Error(`Failed to create tag: ${tag}`);
+        }
+        const success = await imageTagsRepository.addTagToImage(image.id, tagId);
         if (!success) {
             throw new Error(`Failed to associate tag '${tag}' with image`);
         }
