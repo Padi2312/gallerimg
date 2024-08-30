@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from '$env/dynamic/private';
 import { logger } from '$lib';
-import { Database as SQLiteDatabase } from "bun:sqlite";
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import pg from 'pg';
@@ -22,89 +20,7 @@ class Database {
         }
     }
 
-    private async migrate() {
-        const SQLITE_PATH = env.SQLITE_PATH || 'data/db.sqlite';
-        const DATABASE_URL = env.DATABASE_URL;
-
-        const pgClient = new pg.Client({
-            connectionString: DATABASE_URL,
-        });
-        const sqliteDb = new SQLiteDatabase(SQLITE_PATH);
-        try {
-            await pgClient.connect();
-
-            // Read and execute schema.sql to create tables in PostgreSQL
-            const schemaPath = 'database/schema.sql';
-            const schema = fs.readFileSync(schemaPath, 'utf-8');
-            await pgClient.query(schema);
-
-            // Migrate images
-            const images = sqliteDb.prepare('SELECT * FROM images').all();
-            for (const _image of images) {
-                const image: any = _image;
-                try {
-                    await pgClient.query(
-                        'INSERT INTO images (id, filename, title, description, hash, download_count, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-                        [image.id, image.filename, image.title, image.description, image.hash, image.download_count, image.created_at]
-                    );
-                } catch (error) {
-                    console.error('Failed to migrate image:', image, error);
-                }
-            }
-
-            // Migrate tags
-            const tags = sqliteDb.prepare('SELECT * FROM tags').all();
-            for (const _tag of tags) {
-                const tag: any = _tag;
-                try {
-                    await pgClient.query(
-                        'INSERT INTO tags (id, name) VALUES ($1, $2)',
-                        [tag.id, tag.name]
-                    );
-                } catch (error) {
-                    console.error('Failed to migrate tag:', tag, error);
-
-                }
-
-            }
-
-            // // Migrate metadata
-            // const metadata = sqliteDb.prepare('SELECT * FROM metadata').all();
-            // for (const meta of metadata) {
-            //     await pgClient.query(
-            //         'INSERT INTO metadata (id, image_id, key, value) VALUES ($1, $2, $3, $4)',
-            //         [meta.id, meta.image_id, meta.key, meta.value]
-            //     );
-            // }
-
-            // Migrate image_tags
-            const imageTags = sqliteDb.prepare('SELECT * FROM image_tags').all();
-            for (const _imageTag of imageTags) {
-                const imageTag: any = _imageTag;
-                await pgClient.query(
-                    'INSERT INTO image_tags (image_id, tag_id) VALUES ($1, $2)',
-                    [imageTag.image_id, imageTag.tag_id]
-                );
-            }
-
-            console.log('Migration completed successfully.');
-        } catch (error) {
-            console.error('Migration failed:', error);
-        } finally {
-            await pgClient.end();
-            sqliteDb.close();
-        }
-    }
-
-
-
     async init() {
-        try {
-            await this.migrate()
-        } catch (error) {
-            logger.error('Failed to migrate database:', (error as Error).message);
-        }
-
         try {
             const client = await this.pool.connect();
             fs.mkdirSync(path.dirname(this.dbPath), { recursive: true });
