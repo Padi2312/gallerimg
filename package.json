@@ -48,6 +48,7 @@
     "@sveltejs/kit",
     "better-sqlite3",
     "esbuild",
+    "exifreader",
     "sharp",
     "svelte-preprocess"
   ],
@@ -56,6 +57,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "embla-carousel-autoplay": "^8.2.0",
     "embla-carousel-svelte": "^8.2.0",
+    "exifreader": "^4.23.3",
     "pg": "^8.12.0",
     "sharp": "^0.33.5",
     "svelte-fa": "^4.0.2"
