@@ -3,10 +3,10 @@ import { insertTagIfNotExists } from '$lib/server/core/tags';
 import type { ImageDto } from '$lib/types';
 import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';
+import * as ExifReader from 'exifreader';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { imagesRepository, imageTagsRepository } from "../database/repositories";
-import * as ExifReader from 'exifreader';
+import { imagesRepository, imageTagsRepository } from "../database";
 
 
 const IMAGE_FOLDER = "data/images";
@@ -76,8 +76,6 @@ export const deleteImage = async (id: number): Promise<void> => {
 
 export const getAllImages = async (): Promise<ImageDto[]> => {
     return (await imagesRepository.findAllWithTags()).map(image => {
-        // TODO: Write to Database and return the image data
-        getExifData(image.filename)
         const imgDto: ImageDto = {
             id: image.id!.toString(),
             url: `/api/v1/files/${image.filename}`,
@@ -132,8 +130,7 @@ export const updateImage = async (id: number, data: Partial<ImageDto>): Promise<
     } as unknown as ImageDto;
 };
 
-export const getExifData = async (filename: string): Promise<Record<string, unknown>> => {
-    const exifData = await ExifReader.load(getImagePath(filename));
-    console.log(exifData);
-    return exifData;
+export const getExifData = async (filename: string): Promise<ExifReader.Tags> => {
+    const tags = await ExifReader.load(getImagePath(filename));
+    return tags
 }

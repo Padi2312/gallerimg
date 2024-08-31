@@ -68,7 +68,8 @@ class Database {
 
     async get<T>(query: string, params: unknown[] = []): Promise<T | undefined> {
         try {
-            logger.debug('Executing query:', query, params);
+            const truncatedParams = params.map(param => typeof param === 'string' ? param.substring(0, 25) : param);
+            logger.debug('Executing query:', query, truncatedParams);
             const result = await this.pool.query(query, params);
             return result.rows[0] as T;
         } catch (err) {
@@ -79,7 +80,8 @@ class Database {
 
     async all<T>(query: string, params: unknown[] = []): Promise<T[]> {
         try {
-            logger.debug('Executing query:', query, params);
+            const truncatedParams = params.map(param => typeof param === 'string' ? param.substring(0, 25) : param);
+            logger.debug('Executing query:', query, truncatedParams);
             const result = await this.pool.query(query, params);
             return result.rows as T[];
         } catch (err) {

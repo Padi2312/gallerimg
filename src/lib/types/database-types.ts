@@ -20,3 +20,19 @@ export interface ImageTagModel {
     image_id: number;
     tag_id: number;
 }
+
+// Settings Repository
+export interface SettingsModel {
+    id: number;
+    key: string;
+    value: string;
+    type?: string;
+    updated_at?: string;
+}
+
+// Metadata Repository
+export interface MetadataModel {
+    id: number;
+    image_id: number;
+    exif_data: ExifReader.Tags;
+}

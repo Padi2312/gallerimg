@@ -1,4 +1,4 @@
-import type { ImageModel, ImageTagModel, TagModel } from "../../../../types/databaseTypes";
+import type { ImageModel, ImageTagModel, TagModel } from "../../../../types/database-types";
 import type Database from "../database";
 import { BaseRepository } from "../repository";
 

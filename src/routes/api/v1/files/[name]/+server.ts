@@ -1,4 +1,4 @@
-import { imagesRepository } from '$lib/server/core/database/repositories';
+import { imagesRepository } from '$lib/server/core/database';
 import { loadImage } from '$lib/server/core/images';
 import { errorResponse } from '$lib/server/utils';
 import sharp from 'sharp';

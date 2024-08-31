@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { ImageDto } from '$lib/types';
-	import { faDownload, faExpand } from '@fortawesome/free-solid-svg-icons';
+	import { faCircleInfo, faDownload, faExpand } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import { fade } from 'svelte/transition';
+	import ExifDataDisplay from './ExifDataDisplay.svelte';
 	import ImageModal from './ImageModal.svelte';
 	import Tag from './Tag.svelte';
 
@@ -14,39 +16,21 @@
 	};
 	let { image, width, height, showTags = false, displayActions = true }: ImageProps = $props();
 	let showEnlarged = $state(false);
-	let url = $state(image.url);
+	let url: string | null = $state(null);
+	let exif: any | null = $state(null);
+	let showExif = $state(false);
 
 	$effect(() => {
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						const img = entry.target as HTMLImageElement;
-						img.src = img.dataset.src || '';
-						img.onload = () => {
-							img.style.opacity = '1';
-							img.animate(
-								[
-									{ transform: 'translateY(20px)', opacity: 0 },
-									{ transform: 'translateY(0)', opacity: 1 }
-								],
-								{ duration: 300, easing: 'ease-out', fill: 'forwards' }
-							);
-						};
-						observer.unobserve(img);
-					}
-				});
-			},
-			{ rootMargin: '100px', threshold: 0.1 }
-		);
-		document.querySelectorAll('img[data-src]').forEach((img) => observer.observe(img));
-		getImageUrl(image);
-		return () => {
-			observer.disconnect();
-		};
+		setImageUrl(image);
 	});
 
-	const getImageUrl = (image: ImageDto) => {
+	$effect(() => {
+		if (showExif && exif === null) {
+			fetchExif();
+		}
+	});
+
+	const setImageUrl = (image: ImageDto) => {
 		if (width && height) {
 			url = image.url + `?width=${width}&height=${height}`;
 		} else if (width) {
@@ -61,25 +45,36 @@
 	const openImageModal = () => {
 		showEnlarged = true;
 	};
+
+	const fetchExif = async () => {
+		const response = await fetch(`/api/v1/images/${image.id}/exif`);
+		exif = await response.json();
+	};
+
+	const toggleExif = () => {
+		showExif = !showExif;
+	};
 </script>
 
 {#if showEnlarged}
 	<ImageModal {image} onClose={() => (showEnlarged = false)} />
 {/if}
 <div class="flex flex-col">
-	<img data-src={url} alt={image.title} class="h-full w-full rounded-t" loading="lazy" />
+	{#if url}
+		<div transition:fade>
+			<img src={url} alt={image.title} class="h-full w-full rounded-t" loading="lazy" />
+		</div>
+	{/if}
 
-	<div class="flex items-center justify-between bg-bg-secondary px-2 rounded-b">
-		{#if showTags}
-			<div class="">
-				{#each image.tags as tag}
-					<Tag>{tag}</Tag>
-				{/each}
-			</div>
-		{/if}
-
+	<div class="items-cente flex flex-col justify-start space-y-2 rounded-b bg-bg-secondary p-2">
 		{#if displayActions}
-			<div class="inline-flex space-x-2 py-2">
+			<div class="flex space-x-2">
+				<button class="btn-overlay" onclick={openImageModal}>
+					<Fa icon={faExpand} size="xs" />
+				</button>
+				<button class="btn-overlay" onclick={toggleExif}>
+					<Fa icon={faCircleInfo} size="xs" />
+				</button>
 				<a
 					href="{image.url}?download=true"
 					class="btn-overlay"
@@ -88,11 +83,19 @@
 				>
 					<Fa icon={faDownload} size="xs" />
 				</a>
-
-				<button class="btn-overlay" onclick={openImageModal}>
-					<Fa icon={faExpand} size="xs" />
-				</button>
 			</div>
+		{/if}
+
+		{#if showTags}
+			<div class="">
+				{#each image.tags as tag}
+					<Tag>{tag}</Tag>
+				{/each}
+			</div>
+		{/if}
+
+		{#if showExif && exif}
+			<ExifDataDisplay metadataModel={exif} />
 		{/if}
 	</div>
 </div>

@@ -40,6 +40,21 @@ export abstract class BaseRepository<T> {
         return result;
     }
 
+    async findByIdList(ids: number[]): Promise<T[]> {
+        if (ids.length === 0) {
+            logger.warn('Empty list of ids provided to findByIdList');
+            return [];
+        }
+        const placeholders = ids.map((_, i) => `$${i + 1}`).join(', ');
+        const query = `SELECT * FROM ${this.tableName} WHERE id IN (${placeholders})`;
+        const results = await this.db.all<T>(query, ids);
+        if (!results || results.length === 0) {
+            logger.warn(`No records found in ${this.tableName} with ids ${ids.join(', ')}`);
+            return [];
+        }
+        return results;
+    }
+
     async create(data: Partial<T>): Promise<number | null> {
         const keys = Object.keys(data);
         const values = Object.values(data);
