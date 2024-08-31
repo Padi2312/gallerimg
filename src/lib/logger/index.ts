@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 enum LogLevel {
     DEBUG = 0,
     INFO = 1,
@@ -19,31 +20,31 @@ export class Logger {
         ).join(' ')}`;
     }
 
-    private logWithColor(color: string, ...args: any[]): void {
-        console.log(color + this.formatMessage(this.level, ...args) + '\x1b[0m');
+    private logWithColor(color: string, level: LogLevel, ...args: any[]): void {
+        console.log(color + this.formatMessage(level, ...args) + '\x1b[0m');
     }
 
     debug(...args: any[]): void {
         if (this.level <= LogLevel.DEBUG) {
-            this.logWithColor('\x1b[36m', ...args); // Cyan
+            this.logWithColor('\x1b[36m', LogLevel.DEBUG, ...args); // Cyan
         }
     }
 
     info(...args: any[]): void {
         if (this.level <= LogLevel.INFO) {
-            this.logWithColor('\x1b[32m', ...args); // Green
+            this.logWithColor('\x1b[32m', LogLevel.INFO, ...args); // Green
         }
     }
 
     warn(...args: any[]): void {
         if (this.level <= LogLevel.WARN) {
-            this.logWithColor('\x1b[33m', ...args); // Yellow
+            this.logWithColor('\x1b[33m', LogLevel.WARN, ...args); // Yellow
         }
     }
 
     error(...args: any[]): void {
         if (this.level <= LogLevel.ERROR) {
-            this.logWithColor('\x1b[31m', ...args); // Red
+            this.logWithColor('\x1b[31m', LogLevel.ERROR, ...args); // Red
         }
     }
 
