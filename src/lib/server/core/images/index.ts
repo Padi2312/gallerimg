@@ -6,7 +6,7 @@ import * as crypto from 'crypto';
 import * as ExifReader from 'exifreader';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { imagesRepository, imageTagsRepository } from "../database";
+import { imagesRepository, imageTagsRepository, metadataRepository } from "../database";
 
 
 const IMAGE_FOLDER = "data/images";
@@ -52,10 +52,21 @@ export const saveImage = async (file: File): Promise<string> => {
 
     await fs.writeFile(filePath, buffer)
 
-    imagesRepository.create({
+    const id = await imagesRepository.create({
         filename: fileName,
         hash,
     })
+    if (id === null) {
+        logger.error('Failed to save image to database')
+        throw new Error('Failed to save image to database')
+    }
+
+    const exifData = await getExifData(fileName);
+    await metadataRepository.create({
+        image_id: id,
+        exif_data: JSON.stringify(exifData) as unknown as ExifReader.Tags
+    })
+
     return filePath
 }
 
@@ -130,7 +141,12 @@ export const updateImage = async (id: number, data: Partial<ImageDto>): Promise<
     } as unknown as ImageDto;
 };
 
-export const getExifData = async (filename: string): Promise<ExifReader.Tags> => {
-    const tags = await ExifReader.load(getImagePath(filename));
-    return tags
+export const getExifData = async (file: string | File): Promise<ExifReader.Tags> => {
+    if (typeof file === 'string') {
+        const tags = await ExifReader.load(getImagePath(file));
+        return tags
+    } else {
+        const tags = await ExifReader.load(file);
+        return tags
+    }
 }

@@ -66,38 +66,40 @@
 		</div>
 	{/if}
 
-	<div class="items-cente flex flex-col justify-start space-y-2 rounded-b bg-bg-secondary p-2">
-		{#if displayActions}
-			<div class="flex space-x-2">
-				<button class="btn-overlay" onclick={openImageModal}>
-					<Fa icon={faExpand} size="xs" />
-				</button>
-				<button class="btn-overlay" onclick={toggleExif}>
-					<Fa icon={faCircleInfo} size="xs" />
-				</button>
-				<a
-					href="{image.url}?download=true"
-					class="btn-overlay"
-					onclick={(e) => e.stopImmediatePropagation()}
-					download
-				>
-					<Fa icon={faDownload} size="xs" />
-				</a>
-			</div>
-		{/if}
+	{#if displayActions || showTags || showExif}
+		<div class="items-cente flex flex-col justify-start rounded-b bg-bg-secondary p-2">
+			{#if displayActions}
+				<div class="flex space-x-2">
+					<button class="btn-overlay" onclick={openImageModal}>
+						<Fa icon={faExpand} size="xs" />
+					</button>
+					<button class="btn-overlay" onclick={toggleExif}>
+						<Fa icon={faCircleInfo} size="xs" />
+					</button>
+					<a
+						href="{image.url}?download=true"
+						class="btn-overlay"
+						onclick={(e) => e.stopImmediatePropagation()}
+						download
+					>
+						<Fa icon={faDownload} size="xs" />
+					</a>
+				</div>
+			{/if}
 
-		{#if showTags}
-			<div class="">
-				{#each image.tags as tag}
-					<Tag>{tag}</Tag>
-				{/each}
-			</div>
-		{/if}
+			{#if showTags}
+				<div class="">
+					{#each image.tags as tag}
+						<Tag>{tag}</Tag>
+					{/each}
+				</div>
+			{/if}
 
-		{#if showExif && exif}
-			<ExifDataDisplay metadataModel={exif} />
-		{/if}
-	</div>
+			{#if showExif && exif}
+				<ExifDataDisplay metadataModel={exif} />
+			{/if}
+		</div>
+	{/if}
 </div>
 
 <style lang="postcss">

@@ -8,3 +8,4 @@
 	<title>Photo Parndt</title>
 </svelte:head>
 {@render children()}
+
