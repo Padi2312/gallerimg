@@ -2,9 +2,9 @@
 	import { invalidateAll } from '$app/navigation';
 	import { SvelteSet } from 'svelte/reactivity';
 	import type { ImageDto } from '../../types';
-	import Tag from '../common/Tag.svelte';
 	import Checkbox from '../common/Checkbox.svelte';
-	import LoadingSpinner from '../common/LoadingSpinner.svelte';
+	import LoadingButton from '../common/LoadingButton.svelte';
+	import Tag from '../common/Tag.svelte';
 	import EditModal from './EditModal.svelte';
 
 	type ImageListProps = {
@@ -68,18 +68,13 @@
 		<span>{selectedImages.size} of {images.length} image(s) selected</span>
 		<div class="flex items-center space-x-2">
 			<a class="btn" href="/admin/photos/upload"> Upload </a>
-			<button
-				onclick={deleteSelected}
-				disabled={selectedImages.size === 0}
-				class="flex items-center justify-center space-x-2 bg-red-500"
-			>
-				{#if isDeleting}
-					<LoadingSpinner />
-					<span> Deleting...</span>
-				{:else}
-					<span> Delete Selected </span>
-				{/if}
-			</button>
+			<LoadingButton
+				loading={isDeleting}
+				disabled={isDeleting || selectedImages.size === 0}
+				onClick={deleteSelected}
+				label="Delete Selected"
+				attrs={{ class: 'bg-red-500' }}
+			/>
 		</div>
 	</div>
 	<div class="relative w-full overflow-auto">
