@@ -4,15 +4,13 @@
 	import { writable } from 'svelte/store';
 	import type { PageServerData } from './$types';
 	import type { SettingsModel } from '$lib/types/database-types';
+	import LoadingButton from '$lib/components/common/LoadingButton.svelte';
 
 	type SettingsProps = {
 		data: PageServerData;
 	};
 	let { data }: SettingsProps = $props();
-
-	$effect(() => {
-		console.log('data', data);
-	});
+	let isIndexing = $state(false);
 
 	let settings = writable({
 		indexUnindexedImages: false,
@@ -28,6 +26,12 @@
 		const currentSettings = $settings;
 		// await saveSettings(currentSettings);
 		alert('Settings saved successfully!');
+	};
+
+	const startExifIndexing = async () => {
+		isIndexing = true;
+		await fetch('/api/v1/images/exif/index');
+		isIndexing = false;
 	};
 </script>
 
@@ -50,6 +54,15 @@
 		{#each data.settings.settings as setting}
 			{@render settingItem(setting)}
 		{/each}
+
+		<div>
+			<LoadingButton
+				loading={isIndexing}
+				disabled={isIndexing}
+				onClick={startExifIndexing}
+				label="Start EXIF indexing"
+			/>
+		</div>
 	</div>
 </div>
 
