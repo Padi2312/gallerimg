@@ -59,6 +59,7 @@
     "embla-carousel-svelte": "^8.2.0",
     "exifreader": "^4.23.3",
     "pg": "^8.12.0",
+    "pg-error-enum": "^0.7.2",
     "sharp": "^0.33.5",
     "svelte-fa": "^4.0.2"
   }
