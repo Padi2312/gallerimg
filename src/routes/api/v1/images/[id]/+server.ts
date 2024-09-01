@@ -9,8 +9,8 @@ export const PATCH: RequestHandler = async ({ request, params, locals }) => {
         return errorResponse(401, 'Unauthorized');
     }
 
-    const id = Number(params.id);
-    if (isNaN(id)) {
+    const id = params.id;
+    if (!id) {
         return errorResponse(400, 'Invalid ID');
     }
 
@@ -32,8 +32,8 @@ export const DELETE: RequestHandler = async ({ params, locals }) => {
         return errorResponse(401, 'Unauthorized');
     }
 
-    const id = Number(params.id);
-    if (isNaN(id)) {
+    const id = params.id;
+    if (!id) {
         return errorResponse(400, 'Invalid ID');
     }
 

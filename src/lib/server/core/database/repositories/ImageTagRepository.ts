@@ -7,19 +7,19 @@ export class ImageTagsRepository extends BaseRepository<ImageTagModel> {
         super(db, 'image_tags');
     }
 
-    async addTagToImage(imageId: number, tagId: number): Promise<boolean> {
+    async addTagToImage(imageId: string, tagId: string): Promise<boolean> {
         const query = 'INSERT INTO image_tags (image_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING';
         const result = await this.db.run(query, [imageId, tagId]);
         return (result.rowCount ?? 0) > 0;
     }
 
-    async removeTagFromImage(imageId: number, tagId: number): Promise<boolean> {
+    async removeTagFromImage(imageId: string, tagId: string): Promise<boolean> {
         const query = 'DELETE FROM image_tags WHERE image_id = $1 AND tag_id = $2';
         const result = await this.db.run(query, [imageId, tagId]);
         return (result.rowCount ?? 0) > 0;
     }
 
-    async getTagsForImage(imageId: number): Promise<TagModel[]> {
+    async getTagsForImage(imageId: string): Promise<TagModel[]> {
         const query = `
             SELECT t.* 
             FROM tags t
@@ -29,7 +29,7 @@ export class ImageTagsRepository extends BaseRepository<ImageTagModel> {
         return await this.db.all<TagModel>(query, [imageId]) || [];
     }
 
-    async getImagesForTag(tagId: number): Promise<ImageModel[]> {
+    async getImagesForTag(tagId: string): Promise<ImageModel[]> {
         const query = `
             SELECT i.* 
             FROM images i

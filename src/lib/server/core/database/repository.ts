@@ -30,7 +30,7 @@ export abstract class BaseRepository<T> {
         return results;
     }
 
-    async findById(id: number): Promise<T | null> {
+    async findById(id: string): Promise<T | null> {
         const query = `SELECT * FROM ${this.tableName} WHERE id = $1`;
         const result = await this.db.get<T>(query, [id]);
         if (!result) {
@@ -40,7 +40,7 @@ export abstract class BaseRepository<T> {
         return result;
     }
 
-    async findByIdList(ids: number[]): Promise<T[]> {
+    async findByIdList(ids: string[]): Promise<T[]> {
         if (ids.length === 0) {
             logger.warn('Empty list of ids provided to findByIdList');
             return [];
@@ -55,20 +55,21 @@ export abstract class BaseRepository<T> {
         return results;
     }
 
-    async create(data: Partial<T>): Promise<number | null> {
+    async create(data: Partial<T>): Promise<string | null> {
         const keys = Object.keys(data);
         const values = Object.values(data);
         const placeholders = keys.map((_, i) => `$${i + 1}`).join(', ');
         const query = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING id`;
-        const result = await this.db.get<{ id: number }>(query, values);
+        const result = await this.db.get<{ id: string }>(query, values);
         if (!result) {
             logger.error(`Failed to insert into ${this.tableName}`);
             return null;
         }
+        console.log(result)
         return result.id;
     }
 
-    async update(id: number, data: Partial<T>): Promise<boolean> {
+    async update(id: string, data: Partial<T>): Promise<boolean> {
         const keys = Object.keys(data);
         const values = Object.values(data);
         const setClause = keys.map((key, i) => `${key} = $${i + 1}`).join(', ');
@@ -81,7 +82,7 @@ export abstract class BaseRepository<T> {
         return (result.rowCount ?? 0) > 0;
     }
 
-    async delete(id: number): Promise<boolean> {
+    async delete(id: string): Promise<boolean> {
         const query = `DELETE FROM ${this.tableName} WHERE id = $1`;
         const result = await this.db.run(query, [id]);
         if (!result) {

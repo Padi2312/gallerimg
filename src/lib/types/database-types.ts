@@ -1,6 +1,6 @@
 // Images Repository
 export interface ImageModel {
-    id: number;
+    id: string;
     filename: string;
     hash: string;
     title?: string;
@@ -11,19 +11,19 @@ export interface ImageModel {
 
 // Tags Repository
 export interface TagModel {
-    id: number;
+    id: string;
     name: string;
 }
 
 // Relation ImageTags Repository
 export interface ImageTagModel {
-    image_id: number;
-    tag_id: number;
+    image_id: string;
+    tag_id: string;
 }
 
 // Settings Repository
 export interface SettingsModel {
-    id: number;
+    id: string;
     key: string;
     value: string;
     type?: string;
@@ -32,7 +32,7 @@ export interface SettingsModel {
 
 // Metadata Repository
 export interface MetadataModel {
-    id: number;
-    image_id: number;
+    id: string;
+    image_id: string;
     exif_data: ExifReader.Tags;
 }

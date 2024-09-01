@@ -12,7 +12,7 @@ export class TagsRepository extends BaseRepository<TagModel> {
         return await this.db.get<TagModel>(query, [name]) || null;
     }
 
-    async getOrCreate(name: string): Promise<number> {
+    async getOrCreate(name: string): Promise<string> {
         const existingTag = await this.findByName(name);
         if (existingTag) return existingTag.id;
         const newTagId = await this.create({ name });

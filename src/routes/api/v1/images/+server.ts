@@ -36,7 +36,7 @@ export const DELETE: RequestHandler = async ({ request, locals }) => {
     }
 
     const body = await request.json()
-    const ids = body.ids as number[]
+    const ids = body.ids as string[]
     try {
         for (const item of ids) {
             await deleteImage(item)

@@ -6,7 +6,7 @@ export const getAllTags = async (): Promise<TagModel[]> => {
     return tags
 }
 
-export const insertTagIfNotExists = async (name: string): Promise<number | null> => {
+export const insertTagIfNotExists = async (name: string): Promise<string | null> => {
     const tag = await tagsRepository.findByName(name)
     if (tag) {
         return tag.id

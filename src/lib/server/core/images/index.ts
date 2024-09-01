@@ -75,7 +75,7 @@ export const loadImage = async (filename: string): Promise<Buffer> => {
     return await fs.readFile(filePath)
 }
 
-export const deleteImage = async (id: number): Promise<void> => {
+export const deleteImage = async (id: string): Promise<void> => {
     const image = await imagesRepository.findById(id)
     if (image === null) {
         throw new Error('Image not found')
@@ -99,7 +99,7 @@ export const getAllImages = async (): Promise<ImageDto[]> => {
     })
 }
 
-export const updateImage = async (id: number, data: Partial<ImageDto>): Promise<ImageDto> => {
+export const updateImage = async (id: string, data: Partial<ImageDto>): Promise<ImageDto> => {
     const image = await imagesRepository.findById(id);
     if (image === null) {
         throw new Error('Image not found');

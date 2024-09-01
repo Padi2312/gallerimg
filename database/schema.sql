@@ -1,6 +1,6 @@
 -- `images` table stores the data of the images uploaded by the user. 
 CREATE TABLE IF NOT EXISTS images (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     filename TEXT NOT NULL,
     title TEXT,
     description TEXT,
@@ -10,13 +10,13 @@ CREATE TABLE IF NOT EXISTS images (
 );
 -- `tags` stores the tags that are associated with the images. 
 CREATE TABLE IF NOT EXISTS tags (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     CONSTRAINT name_unique UNIQUE (name)
 );
 CREATE TABLE IF NOT EXISTS metadata (
-    id SERIAL PRIMARY KEY,
-    image_id INTEGER NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    image_id UUID NOT NULL,
     -- We'll store the EXIF data as JSONB in this column for now
     exif_data JSONB,
     FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE,
@@ -24,15 +24,15 @@ CREATE TABLE IF NOT EXISTS metadata (
 );
 -- `image_tags` stores the relationship between the images and the tags.
 CREATE TABLE IF NOT EXISTS image_tags (
-    image_id INTEGER,
-    tag_id INTEGER,
+    image_id UUID,
+    tag_id UUID,
     FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (image_id, tag_id)
 );
 -- `settings` stores the settings of the application.
 CREATE TABLE IF NOT EXISTS settings (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     key VARCHAR(255) UNIQUE NOT NULL,
     value TEXT NOT NULL,
     type VARCHAR(50),

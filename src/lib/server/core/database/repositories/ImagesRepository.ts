@@ -14,7 +14,7 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         this.imageTagsRepo = imageTagsRepo;
     }
 
-    async addImageWithTags(imageData: Omit<ImageModel, 'id' | 'created_at'>, tagNames: string[]): Promise<number | null> {
+    async addImageWithTags(imageData: Omit<ImageModel, 'id' | 'created_at'>, tagNames: string[]): Promise<string | null> {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return await this.db.transaction(async _ => {
             // Create the image
@@ -65,7 +65,7 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         }));
     }
 
-    async getImageWithTags(imageId: number): Promise<(ImageModel & { tags: string[]; }) | null> {
+    async getImageWithTags(imageId: string): Promise<(ImageModel & { tags: string[]; }) | null> {
         const query = `
             SELECT i.*, array_remove(array_agg(t.name), NULL) as tags
             FROM images i
