@@ -4,17 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: 'var(--color-primary)',
-        secondary: 'var(--color-secondary)',
-        text: 'var(--color-text)',
-        bg: 'var(--color-bg)',
-        'bg-secondary': 'var(--color-bg-secondary)',
-        'bg-overlay': 'var(--color-bg-overlay)',
-        'border': 'var(--color-border)',
-      }
-
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        text: 'rgb(var(--color-text) / <alpha-value>)',
+        bg: 'rgb(var(--color-bg) / <alpha-value>)',
+        'bg-secondary': 'rgb(var(--color-bg-secondary) / <alpha-value>)',
+        'bg-overlay': 'rgb(var(--color-bg-overlay) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+      },
     },
   },
   plugins: [],
 }
-
