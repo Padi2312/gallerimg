@@ -8,7 +8,6 @@
 		faNewspaper
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import Header from '../lib/components/Header.svelte';
 
 	let { data } = $props();
 	const images: ImageDto[] = data.images;
@@ -34,7 +33,6 @@
 
 <svelte:window onscroll={handleScroll} />
 <div class="min-h-screen">
-	<Header />
 	<!-- Hero Section -->
 	<section class="relative overflow-hidden !text-gray-200" style="height: calc(100vh - 64px);">
 		<img
