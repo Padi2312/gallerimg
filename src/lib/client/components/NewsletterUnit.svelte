@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LoadingButton from '$lib/client/components/common/LoadingButton.svelte';
 	import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import LoadingButton from './common/LoadingButton.svelte';
 
 	let loading = $state(false);
 	let success: null | boolean = $state(null);

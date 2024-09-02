@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import LoadingSpinner from '$lib/components/common/LoadingSpinner.svelte';
+	import LoadingSpinner from '$lib/client/components/common/LoadingSpinner.svelte';
 	import {
 		faCheckCircle,
 		faExclamationCircle,

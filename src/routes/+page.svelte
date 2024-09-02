@@ -1,8 +1,8 @@
 <script lang="ts">
 	import NewsletterUnit from '$lib/client/pages/main/NewsletterUnit.svelte';
-	import Footer from '$lib/components/Footer.svelte';
-	import Header from '$lib/components/Header.svelte';
-	import type { ImageDto } from '$lib/types';
+	import Footer from '$lib/client/components/layout/Footer.svelte';
+	import Header from '$lib/client/components/layout/Header.svelte';
+	import type { ImageDto } from '$lib/shared/types/index.js';
 	import { faArrowRight, faDownLong, faImages } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 

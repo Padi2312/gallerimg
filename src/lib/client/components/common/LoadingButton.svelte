@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
 	type LoadingButtonProps = {
@@ -7,8 +8,8 @@
 		loading?: boolean;
 		disabled?: boolean;
 		onClick?: () => void;
-		props?: unknown[];
-	};
+	} & HTMLAttributes<any>;
+
 	let {
 		children,
 		loading = $bindable(false),

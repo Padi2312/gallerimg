@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ImageDto } from '$lib/types';
+	import type { ImageDto } from '$lib/shared/types';
 	import { faClose } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 

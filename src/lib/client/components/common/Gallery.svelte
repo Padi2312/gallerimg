@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { ImageDto } from '$lib/types';
-	import Image from '$lib/components/common/Image.svelte';
+	import type { ImageDto } from '$lib/shared/types';
+	import Image from '$lib/client/components/common/Image.svelte';
 
 	type GalleryProps = {
 		images: ImageDto[];

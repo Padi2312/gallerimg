@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { MetadataModel } from '$lib/types/database-types';
+	import type { MetadataModel } from '$lib/server/types/database-types';
 	import {
 		faCamera,
 		faChevronDown,

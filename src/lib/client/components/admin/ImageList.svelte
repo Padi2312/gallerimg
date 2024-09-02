@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import Checkbox from '$lib/client/components/common/Checkbox.svelte';
+	import type { ImageDto } from '$lib/shared/types';
 	import { SvelteSet } from 'svelte/reactivity';
-	import type { ImageDto } from '../../types';
-	import Checkbox from '../common/Checkbox.svelte';
-	import LoadingButton from '../common/LoadingButton.svelte';
-	import Tag from '../common/Tag.svelte';
 	import EditModal from './EditModal.svelte';
+	import LoadingButton from '$lib/client/components/common/LoadingButton.svelte';
+	import Tag from '$lib/client/components/common/Tag.svelte';
 
 	type ImageListProps = {
 		images: ImageDto[];

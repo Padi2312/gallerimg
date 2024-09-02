@@ -1,6 +1,6 @@
 import { logger } from '$lib';
 import { insertTagIfNotExists } from '$lib/server/core/tags';
-import type { ImageDto } from '$lib/types';
+import type { ImageDto } from '$lib/shared/types';
 import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';
 import * as ExifReader from 'exifreader';

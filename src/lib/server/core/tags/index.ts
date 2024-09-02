@@ -1,4 +1,4 @@
-import type { TagModel } from "$lib/types/database-types"
+import type { TagModel } from "$lib/server/types/database-types"
 import { tagsRepository } from "../database"
 
 export const getAllTags = async (): Promise<TagModel[]> => {

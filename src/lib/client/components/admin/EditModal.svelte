@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ImageDto } from '$lib/types';
+	import type { ImageDto } from '$lib/shared/types';
 	import { faClose } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import TagInput from '../common/TagInput.svelte';
 	import { invalidateAll } from '$app/navigation';
+	import TagInput from '$lib/client/components/common/TagInput.svelte';
 
 	type EditModalProps = {
 		show?: boolean;

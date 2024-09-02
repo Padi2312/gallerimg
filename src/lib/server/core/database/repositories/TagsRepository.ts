@@ -1,6 +1,6 @@
 import type Database from "../database";
 import { BaseRepository } from "../repository";
-import type { TagModel } from "../../../../types/database-types";
+import type { TagModel } from "../../../types/database-types";
 
 export class TagsRepository extends BaseRepository<TagModel> {
     constructor(db: Database) {

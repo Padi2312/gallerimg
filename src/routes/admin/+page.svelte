@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
+	import Header from '$lib/client/components/layout/Header.svelte';
 	import { focus } from '$lib/use-directives/use-focus.svelte';
 	import { signIn } from '@auth/sveltekit/client';
 

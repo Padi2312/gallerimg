@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DashboardCard from '$lib/components/admin/DashboardCard.svelte';
+	import DashboardCard from '$lib/client/components/admin/DashboardCard.svelte';
 	import type { PageData } from './$types';
 	type DashboardPageProps = {
 		data: PageData;

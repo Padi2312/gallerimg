@@ -1,3 +1,12 @@
+export interface ImageDto {
+    id: string;
+    url: string;
+    title: string;
+    tags: string[];
+    createdAt: string;
+    downloadCount: number;
+}
+
 export interface ExifData {
     date_time_original?: string;  // ISO 8601 format timestamp
     x_resolution?: number; // XResolution

@@ -1,8 +1,8 @@
 <script lang="ts">
 	// import { getSettings, saveSettings } from '$lib/server/settings';
-	import LoadingButton from '$lib/components/common/LoadingButton.svelte';
-	import Toggle from '$lib/components/common/Toggle.svelte';
-	import type { SettingsModel } from '$lib/types/database-types';
+	import LoadingButton from '$lib/client/components/common/LoadingButton.svelte';
+	import Toggle from '$lib/client/components/common/Toggle.svelte';
+	import type { SettingsModel } from '$lib/server/types/database-types';
 	import type { PageServerData } from './$types';
 
 	type SettingsProps = {
@@ -10,9 +10,6 @@
 	};
 	let { data }: SettingsProps = $props();
 	let isIndexing = $state(false);
-
-
-
 
 	const startExifIndexing = async () => {
 		isIndexing = true;

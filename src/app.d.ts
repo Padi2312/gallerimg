@@ -1,6 +1,5 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { ImageDto } from "$lib/types";
 
 // for information about these interfaces
 declare global {
@@ -8,11 +7,7 @@ declare global {
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
-		interface PageState {
-			showUploadModal?: boolean
-			showEditModal?: boolean
-			image?: ImageDto
-		}
+		// interface PageState {}
 		// interface Platform {}
 	}
 }

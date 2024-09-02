@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ImageList from '$lib/components/admin/ImageList.svelte';
+	import ImageList from '$lib/client/components/admin/ImageList.svelte';
 	import type { PageData } from './$types';
 
 	type AdminPhotosPageProps = {

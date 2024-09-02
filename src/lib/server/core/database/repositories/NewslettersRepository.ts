@@ -1,4 +1,4 @@
-import type { NewsletterModel } from "$lib/types/database-types";
+import type { NewsletterModel } from "$lib/server/types/database-types";
 import type Database from "../database";
 import { BaseRepository } from "../repository";
 

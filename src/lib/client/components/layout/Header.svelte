@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { faBars, faImage } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
-	import DarkModeToggle from './common/DarkModeToggle.svelte';
+	import DarkModeToggle from '../common/DarkModeToggle.svelte';
 
 	type HeaderProps = {
 		showToggleSidebar?: boolean;

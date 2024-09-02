@@ -1,5 +1,5 @@
 <script>
-	import Header from '$lib/components/Header.svelte';
+	import Header from '$lib/client/components/layout/Header.svelte';
 	import { signOut } from '@auth/sveltekit/client';
 	import { faCog, faHome, faImage, faSignOut, faTags } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';

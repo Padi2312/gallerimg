@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ImageDto } from '$lib/types';
+	import type { ImageDto } from '$lib/shared/types';
 	import { faCircleInfo, faDownload, faExpand } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { fade } from 'svelte/transition';
-	import ExifDataDisplay from './ExifDataDisplay.svelte';
+	import ExifDataDisplay from '$lib/client/components/common/ExifDataDisplay.svelte';
 	import ImageModal from './ImageModal.svelte';
 	import Tag from './Tag.svelte';
 
