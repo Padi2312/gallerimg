@@ -1,10 +1,9 @@
 <script lang="ts">
 	// import { getSettings, saveSettings } from '$lib/server/settings';
-	import Toggle from '$lib/components/common/Toggle.svelte';
-	import { writable } from 'svelte/store';
-	import type { PageServerData } from './$types';
-	import type { SettingsModel } from '$lib/types/database-types';
 	import LoadingButton from '$lib/components/common/LoadingButton.svelte';
+	import Toggle from '$lib/components/common/Toggle.svelte';
+	import type { SettingsModel } from '$lib/types/database-types';
+	import type { PageServerData } from './$types';
 
 	type SettingsProps = {
 		data: PageServerData;
@@ -12,21 +11,8 @@
 	let { data }: SettingsProps = $props();
 	let isIndexing = $state(false);
 
-	let settings = writable({
-		indexUnindexedImages: false,
-		indexOnUpload: false
-	});
 
-	// onMount(async () => {
-	// 	const fetchedSettings = await getSettings();
-	// 	settings.set(fetchedSettings);
-	// });
 
-	const handleSave = async () => {
-		const currentSettings = $settings;
-		// await saveSettings(currentSettings);
-		alert('Settings saved successfully!');
-	};
 
 	const startExifIndexing = async () => {
 		isIndexing = true;
@@ -56,12 +42,9 @@
 		{/each}
 
 		<div>
-			<LoadingButton
-				loading={isIndexing}
-				disabled={isIndexing}
-				onClick={startExifIndexing}
-				label="Start EXIF indexing"
-			/>
+			<LoadingButton loading={isIndexing} disabled={isIndexing} onClick={startExifIndexing}>
+				Start EXIF indexing
+			</LoadingButton>
 		</div>
 	</div>
 </div>

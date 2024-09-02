@@ -55,18 +55,27 @@ export abstract class BaseRepository<T> {
         return results;
     }
 
-    async create(data: Partial<T>): Promise<string | null> {
+    async create(data: Partial<T>, returning: string | null = "id"): Promise<string | void> {
         const keys = Object.keys(data);
         const values = Object.values(data);
         const placeholders = keys.map((_, i) => `$${i + 1}`).join(', ');
-        const query = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING id`;
-        const result = await this.db.get<{ id: string }>(query, values);
-        if (!result) {
-            logger.error(`Failed to insert into ${this.tableName}`);
-            return null;
+        const query = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders}) ${returning ? `RETURNING ${returning}` : ''}`;
+        let result = null
+        if (returning) {
+            result = await this.db.get<{ id: string }>(query, values);
+            if (!result) {
+                logger.error(`Failed to insert into ${this.tableName}`);
+                throw new Error(`Failed to insert into ${this.tableName}`);
+            }
+            return result.id;
         }
-        console.log(result)
-        return result.id;
+        else {
+            result = await this.db.run(query, values);
+            if (!result) {
+                logger.error(`Failed to insert into ${this.tableName}`);
+                throw new Error(`Failed to insert into ${this.tableName}`);
+            }
+        }
     }
 
     async update(id: string, data: Partial<T>): Promise<boolean> {

@@ -36,3 +36,9 @@ export interface MetadataModel {
     image_id: string;
     exif_data: ExifReader.Tags;
 }
+
+// Newsletters Repository
+export interface NewsletterModel {
+    email: string;
+    created_at: string;
+}

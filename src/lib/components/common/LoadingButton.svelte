@@ -1,26 +1,27 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
 	type LoadingButtonProps = {
-		label: string;
+		children: Snippet;
 		loading?: boolean;
 		disabled?: boolean;
 		onClick?: () => void;
-		attrs?: Record<string, any>;
+		props?: unknown[];
 	};
 	let {
-		label,
+		children,
 		loading = $bindable(false),
 		disabled,
 		onClick,
-		attrs
+		...props
 	}: LoadingButtonProps = $props();
 	let _loading = $derived(loading);
 </script>
 
 <button
 	class="flex items-center space-x-2"
-	{...attrs}
+	{...props}
 	onclick={() => !disabled && onClick?.()}
 	{disabled}
 	class:loading
@@ -29,7 +30,7 @@
 		<LoadingSpinner />
 	{/if}
 	<div>
-		{label}
+		{@render children()}
 	</div>
 </button>
 

@@ -64,7 +64,7 @@
 {/if}
 
 <div class="rounded-lg shadow-sm">
-	<div class="bg-primary/10 flex items-center justify-between p-4">
+	<div class="flex items-center justify-between bg-primary/10 p-4">
 		<span>{selectedImages.size} of {images.length} image(s) selected</span>
 		<div class="flex items-center space-x-2">
 			<a class="btn" href="/admin/photos/upload"> Upload </a>
@@ -72,9 +72,10 @@
 				loading={isDeleting}
 				disabled={isDeleting || selectedImages.size === 0}
 				onClick={deleteSelected}
-				label="Delete Selected"
-				attrs={{ class: 'bg-red-500' }}
-			/>
+				class="bg-red-500"
+			>
+				Delete Selected
+			</LoadingButton>
 		</div>
 	</div>
 	<div class="relative w-full overflow-auto">

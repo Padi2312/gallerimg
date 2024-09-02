@@ -38,6 +38,10 @@ CREATE TABLE IF NOT EXISTS settings (
     type VARCHAR(50),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS newsletters (
+    email TEXT PRIMARY KEY UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 -- Insert the default settings if they don't already exist
 INSERT INTO settings (key, value, type)
 SELECT 'site_title',
