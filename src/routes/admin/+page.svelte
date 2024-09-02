@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/client/components/layout/Header.svelte';
-	import { focus } from '$lib/use-directives/use-focus.svelte';
+	import { focus } from '$lib/client/use-directives/use-focus.svelte';
 	import { signIn } from '@auth/sveltekit/client';
 
 	let username = $state('');
