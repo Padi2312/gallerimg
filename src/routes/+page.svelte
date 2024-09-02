@@ -1,6 +1,7 @@
 <script lang="ts">
 	import NewsletterUnit from '$lib/client/pages/main/NewsletterUnit.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import Header from '$lib/components/Header.svelte';
 	import type { ImageDto } from '$lib/types';
 	import { faArrowRight, faDownLong, faImages } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
@@ -29,6 +30,7 @@
 
 <svelte:window onscroll={handleScroll} />
 <div class="min-h-screen">
+	<Header />
 	<!-- Hero Section -->
 	<section
 		class="relative overflow-hidden text-center !text-gray-200"
