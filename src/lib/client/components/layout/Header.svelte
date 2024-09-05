@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { faBars, faImage } from '@fortawesome/free-solid-svg-icons';
+	import { page } from '$app/stores';
+	import { faBars } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
 	import DarkModeToggle from '../common/DarkModeToggle.svelte';
 
@@ -8,6 +9,12 @@
 		toggleSidebar?: () => void;
 	};
 	let { showToggleSidebar = false, toggleSidebar }: HeaderProps = $props();
+
+	let isHomeUrl = $state(true);
+
+	$effect(() => {
+		$page.url.pathname === '/' ? (isHomeUrl = true) : (isHomeUrl = false);
+	});
 </script>
 
 <header class="h-16 border-b border-border p-2 pb-4 lg:p-4">
@@ -27,6 +34,9 @@
 
 					<p class="absolute -bottom-3 right-4 text-xs">by parndt</p>
 				</div>
+			</a>
+			<a href={isHomeUrl ? '/gallery' : '/'} class="ms-6 hover:underline">
+				<p class="">{isHomeUrl ? 'Gallery' : 'Home'}</p>
 			</a>
 		</div>
 		<div class="float-end">
