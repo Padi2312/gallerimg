@@ -1,17 +1,29 @@
 <script lang="ts">
 	import LoadingButton from '$lib/client/components/common/LoadingButton.svelte';
+	import { emailRegex } from '$lib/shared/utils/utils';
 	import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	let loading = $state(false);
 	let success: null | boolean = $state(null);
+	let error: null | string = $state(null);
 	let email = $state('');
+
+	const checkEmail = (email: string) => {
+		return emailRegex.test(email);
+	};
 
 	const onSubmit = async (event: Event) => {
 		event.stopPropagation();
 		event.preventDefault();
 
 		loading = true;
+		if (!checkEmail(email)) {
+			loading = false;
+			error = 'Invalid email';
+			return;
+		}
+
 		const response = await fetch('/api/v1/newsletter', {
 			method: 'POST',
 			body: JSON.stringify({ email })
@@ -48,6 +60,7 @@
 					</div>
 				</LoadingButton>
 			</form>
+			<p class="text-sm text-red-500 py-1">{error}</p>
 		{:else if success && success}
 			<p class="mt-4 text-green-500">You're now subscribed to the newsletter</p>
 		{:else if success && !success}

@@ -20,6 +20,7 @@ FROM oven/bun:1-slim AS runner
 WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/database/schema.sql ./database/schema.sql
+COPY --from=builder /app/templates /app/templates
 COPY --from=dependencies /app/node_modules ./node_modules
 
 

@@ -3,6 +3,7 @@ import { deleteImage, saveImage } from "$lib/server/core/images";
 import { errorResponse } from "$lib/server/utils";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { mailService } from "$lib/server/services";
 
 export const POST: RequestHandler = async ({ request, locals }) => {
     const session = await locals.auth();
@@ -26,6 +27,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
             failedFiles.push(item.name)
         }
     }
+
+    try {
+        await mailService.publishNewsLetter('New Images uploaded!', `${uploadedFiles.length} new images uploaded.`)
+    } catch (error) {
+        logger.error(error);
+    }
+
     return json({ success: true, files: uploadedFiles, failed: failedFiles })
 }
 

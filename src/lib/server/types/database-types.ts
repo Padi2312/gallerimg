@@ -39,6 +39,7 @@ export interface MetadataModel {
 
 // Newsletters Repository
 export interface NewsletterModel {
+    id: string;
     email: string;
     created_at: string;
 }
