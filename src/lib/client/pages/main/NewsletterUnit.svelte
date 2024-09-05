@@ -33,7 +33,7 @@
 	};
 </script>
 
-<section class="bg-bg-secondary py-16">
+<section class="bg-bg-secondary py-16" id="newsletter">
 	<div class="container mx-auto px-4 text-center">
 		<h2 class="mb-4 text-3xl font-bold text-primary">Newsletter</h2>
 		{#if success == null}
@@ -60,7 +60,7 @@
 					</div>
 				</LoadingButton>
 			</form>
-			<p class="text-sm text-red-500 py-1">{error}</p>
+			<p class="py-1 text-sm text-red-500">{error}</p>
 		{:else if success && success}
 			<p class="mt-4 text-green-500">You're now subscribed to the newsletter</p>
 		{:else if success && !success}

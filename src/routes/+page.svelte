@@ -1,9 +1,14 @@
 <script lang="ts">
-	import NewsletterUnit from '$lib/client/pages/main/NewsletterUnit.svelte';
 	import Footer from '$lib/client/components/layout/Footer.svelte';
 	import Header from '$lib/client/components/layout/Header.svelte';
+	import NewsletterUnit from '$lib/client/pages/main/NewsletterUnit.svelte';
 	import type { ImageDto } from '$lib/shared/types/index.js';
-	import { faArrowRight, faDownLong, faImages } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faArrowRight,
+		faDownLong,
+		faEnvelope,
+		faImages
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	let { data } = $props();
@@ -52,8 +57,15 @@
 				Scroll down for a little foretaste, subscribe the newsletter to stay up to date
 			</p>
 			<a href="/gallery" class="btn flex items-center gap-2 text-lg">
-				Gallery
-				<Fa icon={faImages} class="h-5 w-5" />
+				View All Images
+				<Fa icon={faImages} size="lg" />
+			</a>
+			<a
+				href="#newsletter"
+				class="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-secondary"
+			>
+				<Fa icon={faEnvelope} size="lg" />
+				Subscribe to Newsletter
 			</a>
 		</div>
 		<div class="absolute bottom-4 flex w-full justify-center">
