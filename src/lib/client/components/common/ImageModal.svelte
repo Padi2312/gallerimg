@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { ImageDto } from '$lib/shared/types';
-	import { faClose } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faClose,
+		faExpand,
+		faExternalLink,
+		faEye,
+		faLowVision
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	type ImageModalProps = {
@@ -10,11 +16,16 @@
 		image: ImageDto;
 	};
 	let { onClose, show = true, allowBackdrop = true, image }: ImageModalProps = $props();
+	let isFullResolution = $state(false);
+	let imgUrl = $state(image.url + '?width=1000');
 
-	// State variables using Svelte 5's $state
-	let title = $state(image.title);
-	let tags = $state(image.tags.join(', '));
-	let description = $state('');
+	$effect(() => {
+		if (isFullResolution) {
+			imgUrl = image.url;
+		} else {
+			imgUrl = image.url + '?width=1000';
+		}
+	});
 
 	// Close function
 	function close() {
@@ -28,13 +39,17 @@
 			close();
 		}
 	}
+
+	function changeResolution() {
+		isFullResolution = !isFullResolution;
+	}
 </script>
 
 {#if show}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
-		class="bg-bg-overlay/50 fixed inset-0 z-40 flex items-center justify-center p-0 lg:p-4"
+		class="fixed inset-0 z-40 flex items-center justify-center bg-bg-overlay/50 p-0 lg:p-4"
 		onclick={handleOutsideClick}
 	>
 		<div
@@ -44,11 +59,35 @@
 				<Fa icon={faClose} />
 			</button>
 			<div class="flex items-center justify-center">
-				<img
-					src={image.url}
-					alt={image.title}
-					class="h-auto max-h-[80vh] w-auto max-w-full rounded-lg"
-				/>
+				{#key imgUrl}
+					<img
+						src={imgUrl}
+						alt={image.title}
+						class="h-auto max-h-[80vh] w-auto max-w-full rounded-lg"
+					/>
+				{/key}
+			</div>
+			<div class="mt-2 flex space-x-2">
+				<button
+					class="flex items-center rounded-lg bg-primary !p-1 text-sm"
+					onclick={changeResolution}
+				>
+					{#if isFullResolution}
+						<Fa icon={faLowVision} class="mr-2" />
+						Low Resolution
+					{:else}
+						<Fa icon={faEye} class="mr-2" />
+						Full Resolution
+					{/if}
+				</button>
+				<a
+					href={image.url}
+					target="_blank"
+					class="flex items-center rounded-lg bg-primary !p-1 text-sm font-medium"
+				>
+					<Fa icon={faExternalLink} class="mr-2" />
+					Open Tab
+				</a>
 			</div>
 		</div>
 	</div>
