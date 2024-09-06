@@ -57,11 +57,11 @@
 				Scroll down for a little foretaste, subscribe the newsletter to stay up to date
 			</p>
 			<div class="flex space-x-4">
-				<a href="/gallery" class="btn flex items-center gap-2 text-lg">
+				<a href="/gallery" class="btn flex items-center gap-2 text-sm md:text-lg">
 					<Fa icon={faImages} size="lg" />
 					View All Images
 				</a>
-				<a href="#newsletter" class="btn flex items-center gap-2 text-lg">
+				<a href="#newsletter" class="btn flex items-center gap-2 text-sm md:text-lg">
 					<Fa icon={faEnvelope} size="lg" />
 					Subscribe to Newsletter
 				</a>
