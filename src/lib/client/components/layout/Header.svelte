@@ -17,7 +17,7 @@
 	});
 </script>
 
-<header class="h-16 border-b border-border p-2 pb-4 lg:p-4">
+<header class="h-16 border-b border-border p-4">
 	<div class="mx-auto flex items-center justify-between space-x-2">
 		<div class="flex items-center">
 			{#if showToggleSidebar}
@@ -30,9 +30,9 @@
 			<a href="/">
 				<div class="relative flex items-center space-x-2">
 					<img src="/favicon.png" alt="Gallerimg" class="h-8 w-8" />
-					<h1 class=" text-2xl font-bold">Gallerimg</h1>
+					<h1 class=" text-2xl font-bold">Photo Parndt</h1>
 
-					<p class="absolute -bottom-3 right-4 text-xs">by parndt</p>
+					<!-- <p class="absolute -bottom-3 right-4 text-xs">by parndt</p> -->
 				</div>
 			</a>
 			<a href={isHomeUrl ? '/gallery' : '/'} class="ms-6 hover:underline">
