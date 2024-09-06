@@ -6,6 +6,9 @@
 	import EditModal from './EditModal.svelte';
 	import LoadingButton from '$lib/client/components/common/LoadingButton.svelte';
 	import Tag from '$lib/client/components/common/Tag.svelte';
+	import ImageModal from '../common/ImageModal.svelte';
+	import { faSort } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
 	type ImageListProps = {
 		images: ImageDto[];
@@ -16,11 +19,10 @@
 	let currentImage: ImageDto | null = $state(null);
 	let isDeleting = $state(false);
 	let searchTerm = $state('');
-	// Filtered and sorted images
 	let filteredImages: ImageDto[] = $state([]);
-	// Sorting and filtering states
 	let sortColumn: keyof ImageDto | null = null;
 	let sortOrder: 'asc' | 'desc' = $state('asc');
+	let toEnlargImage: ImageDto | null = $state(null);
 
 	$effect(() => {
 		// Apply search filter
@@ -96,6 +98,10 @@
 	<EditModal onClose={onCloseEdit} image={currentImage} />
 {/if}
 
+{#if toEnlargImage}
+	<ImageModal image={toEnlargImage} onClose={() => (toEnlargImage = null)} />
+{/if}
+
 <div class="rounded-lg shadow-sm">
 	<div class="flex items-center justify-between rounded bg-bg-secondary p-4">
 		<span>{selectedImages.size} of {images.length} image(s) selected</span>
@@ -135,22 +141,23 @@
 						/>
 					</th>
 					<th class="h-12 px-4 text-left align-middle font-medium">Image</th>
-					<th
-						class="h-12 cursor-pointer px-4 text-left align-middle font-medium"
-						onclick={() => sortBy('title')}>Title</th
-					>
-					<th
-						class="h-12 cursor-pointer px-4 text-left align-middle font-medium"
-						onclick={() => sortBy('tags')}>Tags</th
-					>
-					<th
-						class="h-12 cursor-pointer px-4 text-left align-middle font-medium"
-						onclick={() => sortBy('createdAt')}>Uploaded</th
-					>
-					<th
-						class="h-12 cursor-pointer px-4 text-left align-middle font-medium"
-						onclick={() => sortBy('downloadCount')}>Downloads</th
-					>
+					{#snippet sortingTableHeader(by: keyof ImageDto, label: string)}
+						<th
+							class="h-12 cursor-pointer items-center px-4 text-left align-middle font-medium"
+							onclick={() => sortBy(by)}
+						>
+							<div class="flex items-center space-x-2">
+								<Fa icon={faSort} />
+								<span>
+									{label}
+								</span>
+							</div>
+						</th>
+					{/snippet}
+					{@render sortingTableHeader('title', 'Title')}
+					{@render sortingTableHeader('tags', 'Tags')}
+					{@render sortingTableHeader('createdAt', 'Uploaded')}
+					{@render sortingTableHeader('downloadCount', 'Downloads')}
 					<th class="h-12 px-4 text-left align-middle font-medium">Edit</th>
 				</tr>
 			</thead>
@@ -163,9 +170,12 @@
 								onchange={() => toggleSelection(image.id)}
 							/>
 						</td>
-						<td class="p-4 align-middle">
+						<td
+							class="p-2 align-middle transition-transform duration-150 hover:scale-110"
+							onclick={() => (toEnlargImage = image)}
+						>
 							<img
-								src={image.url + '?height=200'}
+								src={image.url + '?height=150'}
 								width="64"
 								height="64"
 								alt={image.title}
