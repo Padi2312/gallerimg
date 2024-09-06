@@ -1,6 +1,6 @@
 {
   "name": "gallerimg",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -15,7 +15,7 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
-    "@playwright/test": "^1.46.1",
+    "@playwright/test": "^1.47.0",
     "@sveltejs/adapter-auto": "^3.2.4",
     "@sveltejs/adapter-node": "^5.2.2",
     "@sveltejs/kit": "^2.5.26",
