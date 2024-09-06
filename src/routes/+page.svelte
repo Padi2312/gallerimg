@@ -56,17 +56,16 @@
 			<p class="mb-8 max-w-2xl text-lg font-light">
 				Scroll down for a little foretaste, subscribe the newsletter to stay up to date
 			</p>
-			<a href="/gallery" class="btn flex items-center gap-2 text-lg">
-				View All Images
-				<Fa icon={faImages} size="lg" />
-			</a>
-			<a
-				href="#newsletter"
-				class="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-secondary"
-			>
-				<Fa icon={faEnvelope} size="lg" />
-				Subscribe to Newsletter
-			</a>
+			<div class="flex space-x-4">
+				<a href="/gallery" class="btn flex items-center gap-2 text-lg">
+					<Fa icon={faImages} size="lg" />
+					View All Images
+				</a>
+				<a href="#newsletter" class="btn flex items-center gap-2 text-lg">
+					<Fa icon={faEnvelope} size="lg" />
+					Subscribe to Newsletter
+				</a>
+			</div>
 		</div>
 		<div class="absolute bottom-4 flex w-full justify-center">
 			<Fa icon={faDownLong} class="" size="3x" />
