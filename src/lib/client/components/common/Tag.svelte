@@ -4,19 +4,26 @@
 	import Fa from 'svelte-fa';
 
 	type TagProps = {
+		isActive?: boolean;
 		children: Snippet;
+		onClick?: () => void;
 		onDelete?: () => void;
 	};
 
-	let { children, onDelete }: TagProps = $props();
+	let { isActive, onClick, children, onDelete }: TagProps = $props();
 </script>
 
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="inline-flex w-fit items-center whitespace-nowrap rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-text shadow"
+	class="{isActive
+		? 'bg-secondary'
+		: 'bg-transparent'} inline-flex whitespace-nowrap rounded-lg border border-border px-2 py-1 text-xs font-semibold shadow hover:bg-secondary"
+	onclick={onClick}
 >
 	{@render children()}
 	{#if onDelete}
-		<button type="button" class="ms-2 bg-transparent p-1" onclick={onDelete}>
+		<button type="button" class="ms-2 p-1" onclick={onDelete}>
 			<Fa icon={faTimes} class="h-3 w-3" />
 		</button>
 	{/if}

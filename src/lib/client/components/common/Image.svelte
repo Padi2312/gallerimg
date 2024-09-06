@@ -65,9 +65,8 @@
 			<img src={url} alt={image.title} class="h-full w-full rounded-t" loading="lazy" />
 		</div>
 	{/if}
-
 	{#if displayActions || showTags || showExif}
-		<div class="items-cente flex flex-col justify-start rounded-b bg-bg-secondary p-2">
+		<div class="flex flex-col justify-start rounded-b bg-bg-secondary p-2">
 			{#if displayActions}
 				<div class="flex space-x-2">
 					<button class="btn-overlay" onclick={openImageModal}>
@@ -88,7 +87,7 @@
 			{/if}
 
 			{#if showTags}
-				<div class="">
+				<div class="mt-2">
 					{#each image.tags as tag}
 						<Tag>{tag}</Tag>
 					{/each}
