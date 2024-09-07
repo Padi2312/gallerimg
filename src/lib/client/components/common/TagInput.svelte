@@ -40,7 +40,7 @@
 			case ',':
 			case 'Enter':
 				e.preventDefault();
-				addTag(filteredSuggestions[selectedIndex] || newTag);
+				addTag(filteredSuggestions[selectedIndex].toLowerCase() || newTag.toLowerCase());
 				break;
 			case 'ArrowDown':
 				e.preventDefault();
@@ -107,7 +107,7 @@
 		onkeydown={handleKeyDown}
 		oninput={handleInput}
 		onblur={handleBlur}
-		class="min-w-0 flex-1 rounded-md border p-2"
+		class="min-w-0 flex-1 rounded-md border p-2 lowercase"
 	/>
 	{#if showDropdown && filteredSuggestions.length > 0}
 		<ul class="dropdown">
