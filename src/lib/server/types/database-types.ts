@@ -43,3 +43,11 @@ export interface NewsletterModel {
     email: string;
     created_at: string;
 }
+
+// Folders Repository
+export interface FolderModel {
+    id: string;
+    name: string;
+    parent_folder_id?: string;
+    created_at?: string;
+}

@@ -43,6 +43,26 @@ CREATE TABLE IF NOT EXISTS newsletters (
     email TEXT UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- `folders` stores the folder structure for organizing images and other folders.
+CREATE TABLE IF NOT EXISTS folders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    parent_folder_id UUID, -- Recursive reference to another folder (self-referencing for child folders)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_folder_id) REFERENCES folders(id) ON DELETE CASCADE -- Cascading deletion for nested folders
+);
+
+-- `folder_images` stores the relationship between folders and images.
+CREATE TABLE IF NOT EXISTS folder_images (
+    folder_id UUID NOT NULL,
+    image_id UUID NOT NULL,
+    FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE,
+    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE,
+    PRIMARY KEY (folder_id, image_id)
+);
+
 -- Insert the default settings if they don't already exist
 INSERT INTO settings (key, value, type)
 SELECT 'site_title',
