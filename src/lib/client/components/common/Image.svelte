@@ -97,15 +97,22 @@
 			<div class="absolute bottom-1 right-1">
 				{#if displayActions}
 					<div class="flex space-x-2">
-						<button class="border border-text bg-transparent p-1.5" onclick={toggleExif}>
-							<Fa icon={showExif ? faClose : faCircleInfo} size="xs" />
-						</button>
-						<button class="border border-text bg-transparent p-1.5" onclick={downloadImage}>
-							<Fa icon={faDownload} size="xs" />
-						</button>
-						<button class="border border-text bg-transparent p-1.5" onclick={openImageModal}>
-							<Fa icon={faUpRightAndDownLeftFromCenter} size="xs" />
-						</button>
+						{#snippet actionButton(icon, text, onClick)}
+							<button
+								class="group relative border !border-white bg-transparent p-1.5 text-white"
+								onclick={onClick}
+							>
+								<Fa {icon} size="xs" />
+								<span
+									class="absolute bottom-full left-1/2 z-50 mb-1 -translate-x-1/2 transform rounded-md bg-bg-secondary px-2 py-1 text-xs font-medium text-text opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								>
+									{text}
+								</span>
+							</button>
+						{/snippet}
+						{@render actionButton(showExif ? faClose : faCircleInfo, 'Info', toggleExif)}
+						{@render actionButton(faDownload, 'Download', downloadImage)}
+						{@render actionButton(faUpRightAndDownLeftFromCenter, 'Enlarge', openImageModal)}
 					</div>
 				{/if}
 			</div>
