@@ -1,7 +1,14 @@
 <script>
 	import Header from '$lib/client/components/layout/Header.svelte';
 	import { signOut } from '@auth/sveltekit/client';
-	import { faCog, faHome, faImage, faSignOut, faTags } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCog,
+		faHome,
+		faImage,
+		faSignOut,
+		faTags,
+		faUpload
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	let { children } = $props();
@@ -25,6 +32,13 @@
 						<Fa icon={faHome} />
 						Dashboard
 					</a>
+					<a
+						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+						href="/admin/photos/upload"
+					>
+						<Fa icon={faUpload} />
+						Upload</a
+					>
 					<a
 						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
 						href="/admin/photos"

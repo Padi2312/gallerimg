@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import Checkbox from '$lib/client/components/common/Checkbox.svelte';
-	import type { ImageDto } from '$lib/shared/types';
-	import { SvelteSet } from 'svelte/reactivity';
-	import EditModal from './EditModal.svelte';
-	import LoadingButton from '$lib/client/components/common/LoadingButton.svelte';
 	import Tag from '$lib/client/components/common/Tag.svelte';
-	import ImageModal from '../common/ImageModal.svelte';
+	import type { ImageDto } from '$lib/shared/types';
 	import { faSort } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import { SvelteSet } from 'svelte/reactivity';
+	import Dropdown from '../common/Dropdown.svelte';
+	import DropdownItem from '../common/DropdownItem.svelte';
+	import ImageModal from '../common/ImageModal.svelte';
+	import EditModal from './EditModal.svelte';
+	import ImageFolderModal from './ImageFolderModal.svelte';
 
 	type ImageListProps = {
 		images: ImageDto[];
@@ -17,6 +19,7 @@
 	let selectedImages = $state<Set<string>>(new SvelteSet([]));
 	let showEditModal = $state(false);
 	let currentImage: ImageDto | null = $state(null);
+	let showFoldersModal = $state(false);
 	let isDeleting = $state(false);
 	let searchTerm = $state('');
 	let filteredImages: ImageDto[] = $state([]);
@@ -102,20 +105,25 @@
 	<ImageModal image={toEnlargImage} onClose={() => (toEnlargImage = null)} />
 {/if}
 
+{#if showFoldersModal}
+	<ImageFolderModal {selectedImages} onClose={() => (showFoldersModal = false)} />
+{/if}
+
 <div class="rounded-lg shadow-sm">
 	<div class="flex items-center justify-between rounded bg-bg-secondary p-4">
 		<span>{selectedImages.size} of {images.length} image(s) selected</span>
-		<div class="flex items-center space-x-2">
-			<a class="btn" href="/admin/photos/upload"> Upload </a>
-			<LoadingButton
-				loading={isDeleting}
-				disabled={isDeleting || selectedImages.size === 0}
-				onClick={deleteSelected}
-				class="bg-red-500"
+		<Dropdown>
+			<DropdownItem onClick={deleteSelected} disabled={selectedImages.size === 0 || isDeleting}>
+				{#if isDeleting}
+					<span>Deleting...</span>
+				{:else}
+					Delete Selected
+				{/if}
+			</DropdownItem>
+			<DropdownItem disabled={selectedImages.size === 0} onClick={() => (showFoldersModal = true)}
+				>Add to folder</DropdownItem
 			>
-				Delete Selected
-			</LoadingButton>
-		</div>
+		</Dropdown>
 	</div>
 	<div class="py-4">
 		<input

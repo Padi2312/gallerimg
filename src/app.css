@@ -7,7 +7,7 @@
 		/* Primary Color */
 		--color-primary: 105 159 45;
 		--color-secondary: 181 194 61;
-		--color-text: 52 52 52;
+		--color-text: 42 42 42;
 		--color-bg: 233 233 233;
 		--color-bg-secondary: 242 242 242;
 		--color-bg-overlay: 104 104 104;
@@ -41,7 +41,7 @@
 
 @layer utilities {
 	.btn {
-		@apply rounded-md bg-primary px-4 py-2 font-semibold text-white transition-colors duration-300 ease-in-out;
+		@apply rounded-md bg-primary px-4 py-2 font-semibold text-text transition-colors duration-300 ease-in-out;
 		@apply hover:bg-secondary;
 		@apply active:bg-secondary disabled:cursor-not-allowed disabled:opacity-50;
 	}
