@@ -1,4 +1,5 @@
 import { database } from "$lib/server/core";
+import { FoldersRepository } from "./repositories/FoldersRepository";
 import { ImagesRepository } from "./repositories/ImagesRepository";
 import { ImageTagsRepository } from "./repositories/ImageTagRepository";
 import { MetadataRepository } from "./repositories/MetadataRepository";
@@ -12,6 +13,8 @@ const imagesRepository = new ImagesRepository(database, tagsRepository, imageTag
 const settingsRepository = new SettingsRepository(database);
 const metadataRepository = new MetadataRepository(database);
 const newslettersRepository = new NewslettersRepository(database);
+const foldersRepository = new FoldersRepository(database);
+
 export {
     imagesRepository,
     imageTagsRepository,
@@ -19,5 +22,6 @@ export {
     newslettersRepository,
     settingsRepository,
     tagsRepository,
+    foldersRepository
 };
 

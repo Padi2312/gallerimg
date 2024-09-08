@@ -55,6 +55,25 @@ export abstract class BaseRepository<T> {
         return results;
     }
 
+    async findBy(field: string, value: string): Promise<T | null> {
+        const query = `SELECT * FROM ${this.tableName} WHERE ${field} = $1`;
+        const result = await this.db.get<T>(query, [value]);
+        if (!result) {
+            logger.warn(`No record found in ${this.tableName} with ${field} ${value}`);
+            return null;
+        }
+        return result;
+    }
+
+    async findAllBy(field: string, value: string): Promise<T[]> {
+        const query = `SELECT * FROM ${this.tableName} WHERE ${field} = $1`;
+        const results = await this.db.all<T>(query, [value]);
+        if (!results || results.length === 0) {
+            logger.warn(`No records found in ${this.tableName} with ${field} ${value}`);
+            return [];
+        }
+        return results;
+    }
     async create(data: Partial<T>, returning: string | null = "id"): Promise<string | void> {
         const keys = Object.keys(data);
         const values = Object.values(data);
