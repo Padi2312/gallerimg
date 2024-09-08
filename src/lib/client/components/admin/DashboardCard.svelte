@@ -1,11 +1,14 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	type DashboardCardProps = {
 		title: string;
 		value: string | number;
+		children?: Snippet;
 		description?: string;
 	};
 
-	let { title, value, description }: DashboardCardProps = $props();
+	let { title, value, description, children = undefined }: DashboardCardProps = $props();
 </script>
 
 <div class="block min-w-48 flex-col space-y-4 rounded-lg border border-border p-4 shadow-lg">
@@ -16,6 +19,13 @@
 		{/if}
 	</div>
 	<div class="p-6">
-		<div class="text-4xl font-bold">{value}</div>
+		{#if children}
+			<div class="flex space-x-6">
+				<div class="text-4xl font-bold md:text-6xl">{value}</div>
+				{@render children()}
+			</div>
+		{:else if !children && value}
+			<div class="text-4xl font-bold md:text-6xl">{value}</div>
+		{/if}
 	</div>
 </div>

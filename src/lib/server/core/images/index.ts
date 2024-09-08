@@ -26,6 +26,20 @@ export const getImageCount = async (): Promise<number> => {
     return await imagesRepository.count()
 }
 
+export const getMostDownloadedImages = async (limit: number): Promise<ImageDto[]> => {
+    return (await imagesRepository.findMostDownloaded(limit)).map(image => {
+        const imgDto: ImageDto = {
+            id: image.id!.toString(),
+            url: `/api/v1/files/${image.filename}`,
+            title: image.filename,
+            tags: [],
+            createdAt: image.created_at!,
+            downloadCount: image.download_count
+        }
+        return imgDto
+    })
+}
+
 export const getUsedStorage = async (): Promise<number> => {
     const files = await fs.readdir(IMAGE_FOLDER);
     const filePaths = files.map(file => path.join(IMAGE_FOLDER, file));
