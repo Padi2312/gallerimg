@@ -1,9 +1,13 @@
 <script lang="ts">
 	import type { ImageDto } from '$lib/shared/types';
-	import { faCircleInfo, faDownload, faExpand } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCircleInfo,
+		faClose,
+		faDownload,
+		faUpRightAndDownLeftFromCenter
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { fade } from 'svelte/transition';
-	import ExifDataDisplay from '$lib/client/components/common/ExifDataDisplay.svelte';
+	import { fade, slide } from 'svelte/transition';
 	import ImageModal from './ImageModal.svelte';
 	import Tag from './Tag.svelte';
 
@@ -42,13 +46,24 @@
 		}
 	};
 
+	const downloadImage = () => {
+		const a = document.createElement('a');
+		a.href = image.url + '?download=true';
+		a.download = image.title;
+		a.click();
+	};
+
 	const openImageModal = () => {
 		showEnlarged = true;
 	};
 
 	const fetchExif = async () => {
 		const response = await fetch(`/api/v1/images/${image.id}/exif`);
-		exif = await response.json();
+		let data = await response.json();
+		delete data.id;
+		delete data.image_id;
+		delete data.date_time_original;
+		exif = data;
 	};
 
 	const toggleExif = () => {
@@ -61,48 +76,49 @@
 {/if}
 <div class="flex flex-col">
 	{#if url}
-		<div transition:fade>
+		<div class="relative" transition:fade>
 			<img src={url} alt={image.title} class="h-full w-full rounded-t" loading="lazy" />
-		</div>
-	{/if}
-	{#if displayActions || showTags || showExif}
-		<div class="flex flex-col justify-start rounded-b bg-bg-secondary p-2">
-			{#if displayActions}
-				<div class="flex space-x-2">
-					<button class="btn-overlay" onclick={openImageModal}>
-						<Fa icon={faExpand} size="xs" />
-					</button>
-					<button class="btn-overlay" onclick={toggleExif}>
-						<Fa icon={faCircleInfo} size="xs" />
-					</button>
-					<a
-						href="{image.url}?download=true"
-						class="btn-overlay"
-						onclick={(e) => e.stopImmediatePropagation()}
-						download
-					>
-						<Fa icon={faDownload} size="xs" />
-					</a>
-				</div>
-			{/if}
-
-			{#if showTags}
-				<div class="mt-2">
-					{#each image.tags as tag}
-						<Tag>{tag}</Tag>
-					{/each}
-				</div>
-			{/if}
 
 			{#if showExif && exif}
-				<ExifDataDisplay metadataModel={exif} />
+				<div
+					transition:slide
+					class="absolute inset-0 flex items-end bg-black bg-opacity-50 px-6 pb-10"
+				>
+					<div class="grid w-full grid-cols-2 text-white">
+						{#each Object.entries(exif) as [key, value]}
+							<div class="flex flex-col">
+								<span class="text-xs uppercase tracking-wide opacity-75">{key}</span>
+								<span class="text-sm font-semibold">{value}</span>
+							</div>
+						{/each}
+					</div>
+				</div>
 			{/if}
+			<div class="absolute bottom-1 right-1">
+				{#if displayActions}
+					<div class="flex space-x-2">
+						<button class="border border-text bg-transparent p-1.5" onclick={toggleExif}>
+							<Fa icon={showExif ? faClose : faCircleInfo} size="xs" />
+						</button>
+						<button class="border border-text bg-transparent p-1.5" onclick={downloadImage}>
+							<Fa icon={faDownload} size="xs" />
+						</button>
+						<button class="border border-text bg-transparent p-1.5" onclick={openImageModal}>
+							<Fa icon={faUpRightAndDownLeftFromCenter} size="xs" />
+						</button>
+					</div>
+				{/if}
+			</div>
+		</div>
+	{/if}
+	{#if showTags}
+		<div class="py-1">
+			{#each image.tags as tag}
+				<Tag>{tag}</Tag>
+			{/each}
 		</div>
 	{/if}
 </div>
 
-<style lang="postcss">
-	.btn-overlay {
-		@apply rounded !bg-gray-300/50 p-1.5 text-text hover:bg-gray-300 dark:bg-gray-600/50 dark:hover:bg-gray-600;
-	}
+<style>
 </style>

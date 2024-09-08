@@ -51,7 +51,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 		{#each filteredItems as item (item.id)}
 			<div transition:fade={{ duration: 300 }} animate:flip={{ duration: 300 }}>
 				<Image image={item} width={400} showTags displayActions />
