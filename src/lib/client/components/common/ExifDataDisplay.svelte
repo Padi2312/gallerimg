@@ -12,63 +12,39 @@
 	import Fa from 'svelte-fa';
 	import { slide } from 'svelte/transition';
 
+	// Props for the component
 	type ExifDataDisplayProps = {
 		metadataModel: MetadataModel;
 	};
 	let { metadataModel }: ExifDataDisplayProps = $props();
-	const { exif_data: rawExifValue } = metadataModel;
+
+	// exifData object now references metadataModel directly
 	const exifData = {
-		'Image Info': [
-			{ label: 'Image Height', value: rawExifValue['ImageHeight']?.description },
-			{ label: 'Image Width', value: rawExifValue['ImageWidth']?.description },
-			{ label: 'Color Components', value: rawExifValue['ColorComponents']?.value },
-			{ label: 'Subsampling', value: rawExifValue['Subsampling']?.description },
-			{ label: 'Color Space', value: rawExifValue['ColorSpace']?.description },
-			{ label: 'Pixel X Dimension', value: rawExifValue['PixelXDimension']?.value },
-			{ label: 'Pixel Y Dimension', value: rawExifValue['PixelYDimension']?.value }
+		'Capture Info': [
+			{ label: 'Date Time Original', value: metadataModel.date_time_original },
+			{ label: 'Exposure Time', value: metadataModel.exposure_time },
+			{ label: 'Aperture (F Number)', value: metadataModel.f_number },
+			{ label: 'ISO Speed', value: metadataModel.iso?.toString() },
+			{ label: 'Focal Length', value: metadataModel.focal_length },
+			{ label: 'Flash Used', value: metadataModel.flash ? 'Yes' : 'No' },
+			{ label: 'Exposure Bias', value: metadataModel.exposure_bias?.toString() }
 		],
 		'Camera Info': [
-			{ label: 'Make', value: rawExifValue['Make']?.description },
-			{ label: 'Model', value: rawExifValue['Model']?.description },
-			{ label: 'Lens Model', value: rawExifValue['LensModel']?.description },
-			{ label: 'Lens Specification', value: rawExifValue['LensSpecification']?.description },
-			{ label: 'Camera Owner Name', value: rawExifValue['CameraOwnerName']?.description },
-			{ label: 'Body Serial Number', value: rawExifValue['BodySerialNumber']?.description },
-			{ label: 'Lens Serial Number', value: rawExifValue['LensSerialNumber']?.description }
-		],
-		'Capture Info': [
-			{ label: 'Date Time', value: rawExifValue['DateTime']?.description },
-			{ label: 'Date Time Original', value: rawExifValue['DateTimeOriginal']?.description },
-			{ label: 'Date Time Digitized', value: rawExifValue['DateTimeDigitized']?.description },
-			{ label: 'Exposure Time', value: rawExifValue['ExposureTime']?.description },
-			{ label: 'F Number', value: rawExifValue['FNumber']?.description },
-			{ label: 'ISO Speed Ratings', value: rawExifValue['ISOSpeedRatings']?.value },
-			{ label: 'Focal Length', value: rawExifValue['FocalLength']?.description },
-			{ label: 'Exposure Program', value: rawExifValue['ExposureProgram']?.description },
-			{ label: 'Metering Mode', value: rawExifValue['MeteringMode']?.description },
-			{ label: 'Flash', value: rawExifValue['Flash']?.description },
-			{ label: 'White Balance', value: rawExifValue['WhiteBalance']?.description }
-		],
-		'File Info': [
-			{ label: 'File Type', value: rawExifValue['FileType']?.description },
-			{ label: 'Orientation', value: rawExifValue['Orientation']?.description },
-			{ label: 'X Resolution', value: rawExifValue['XResolution']?.description },
-			{ label: 'Y Resolution', value: rawExifValue['YResolution']?.description },
-			{ label: 'Resolution Unit', value: rawExifValue['ResolutionUnit']?.description },
-			{ label: 'Copyright', value: rawExifValue['Copyright']?.description },
-			{ label: 'Artist', value: rawExifValue['Artist']?.description },
-			{ label: 'Rating', value: rawExifValue['Rating']?.value }
+			{ label: 'Camera Model', value: metadataModel.model },
+			{ label: 'Lens Model', value: metadataModel.lens_model }
 		]
 	};
+
+	// Category icons
 	const categoryIcons: Record<string, IconDefinition> = {
-		'Image Info': faImage,
-		'Camera Info': faCamera,
 		'Capture Info': faClock,
-		'File Info': faFileAlt
+		'Camera Info': faCamera
 	};
 
+	// Expanded categories state
 	let expandedCategories = $state<string[]>([]);
 
+	// Toggle expanded categories
 	function toggleCategory(category: string) {
 		if (expandedCategories.includes(category)) {
 			expandedCategories = expandedCategories.filter((c) => c !== category);
@@ -77,19 +53,21 @@
 		}
 	}
 
+	// Get important information for display at the top
 	function getImportantInfo() {
 		return [
-			{ label: 'Camera', value: rawExifValue['Model']?.description },
-			{ label: 'Lens', value: rawExifValue['LensModel']?.description },
-			{ label: 'Focal Length', value: rawExifValue['FocalLength']?.description },
-			{ label: 'Aperture', value: rawExifValue['FNumber']?.description },
-			{ label: 'Shutter Speed', value: rawExifValue['ExposureTime']?.description },
-			{ label: 'ISO', value: rawExifValue['ISOSpeedRatings']?.value }
+			{ label: 'Camera', value: metadataModel.model },
+			{ label: 'Lens', value: metadataModel.lens_model },
+			{ label: 'Focal Length', value: metadataModel.focal_length },
+			{ label: 'Aperture', value: metadataModel.f_number },
+			{ label: 'Shutter Speed', value: metadataModel.exposure_time },
+			{ label: 'ISO', value: metadataModel.iso?.toString() }
 		].filter((item) => item.value);
 	}
 </script>
 
 <div transition:slide={{ duration: 200 }}>
+	<!-- Important information grid -->
 	<div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
 		{#each getImportantInfo() as { label, value }}
 			<div class="rounded-lg bg-bg-secondary p-2 text-center shadow-sm">
@@ -99,6 +77,7 @@
 		{/each}
 	</div>
 
+	<!-- Detailed EXIF data with collapsible sections -->
 	{#each Object.entries(exifData) as [category, items]}
 		<div class="mb-2">
 			<button
@@ -129,3 +108,6 @@
 		</div>
 	{/each}
 </div>
+
+<style>
+</style>

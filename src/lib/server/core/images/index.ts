@@ -1,9 +1,9 @@
 import { logger } from '$lib';
 import { insertTagIfNotExists } from '$lib/server/core/tags';
-import type { ImageDto } from '$lib/shared/types';
+import type { ExifData, ImageDto } from '$lib/shared/types';
 import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';
-import * as ExifReader from 'exifreader';
+import ExifReader from 'exifreader';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { imagesRepository, imageTagsRepository, metadataRepository } from "../database";
@@ -141,12 +141,31 @@ export const updateImage = async (id: string, data: Partial<ImageDto>): Promise<
     } as unknown as ImageDto;
 };
 
-export const getExifData = async (file: string | File): Promise<ExifReader.Tags> => {
+export const getExifData = async (file: string | File): Promise<ExifData> => {
+    let tags = null
     if (typeof file === 'string') {
-        const tags = await ExifReader.load(getImagePath(file));
-        return tags
+        tags = await ExifReader.load(getImagePath(file));
     } else {
-        const tags = await ExifReader.load(file);
-        return tags
+        tags = await ExifReader.load(file);
     }
+
+    if (!tags) {
+        throw new Error('Failed to read EXIF data')
+    }
+    function fixTimestampFormat(timestamp: string): string {
+        // Replace the first two colons with hyphens to correct the date format
+        return timestamp.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
+    }
+    const exifData: ExifData = {
+        date_time_original: fixTimestampFormat(tags['DateTimeOriginal']?.description ?? 'N/A'),
+        model: tags['Model']?.description,
+        f_number: tags['FNumber']?.description,
+        exposure_time: tags['ExposureTime']?.description,
+        iso: Number(tags['ISOSpeedRatings']?.value),
+        focal_length: tags['FocalLength']?.description,
+        flash: (tags['Flash']?.value ? true : false) as boolean,
+        exposure_bias: Number(tags['ExposureBiasValue']?.description) as unknown as number,
+        lens_model: tags['LensModel']?.description,
+    }
+    return exifData
 }

@@ -1,3 +1,5 @@
+import type { ExifData } from "$lib/shared/types";
+
 // Images Repository
 export interface ImageModel {
     id: string;
@@ -31,10 +33,9 @@ export interface SettingsModel {
 }
 
 // Metadata Repository
-export interface MetadataModel {
+export interface MetadataModel extends ExifData {
     id: string;
     image_id: string;
-    exif_data: ExifReader.Tags;
 }
 
 // Newsletters Repository
