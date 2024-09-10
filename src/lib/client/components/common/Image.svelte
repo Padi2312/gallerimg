@@ -22,7 +22,6 @@
 		displayActions = true,
 		onclick
 	}: ImageProps = $props();
-	let showEnlarged = $state(false);
 	let url: string | null = $state(null);
 	let exif: any | null = $state(null);
 	let showExif = $state(false);
@@ -56,10 +55,6 @@
 		a.click();
 	};
 
-	const openImageModal = () => {
-		showEnlarged = true;
-	};
-
 	const fetchExif = async () => {
 		const response = await fetch(`/api/v1/images/${image.id}/exif`);
 		let data = await response.json();
@@ -76,9 +71,6 @@
 	};
 </script>
 
-{#if showEnlarged}
-	<ImageModal {image} onClose={() => (showEnlarged = false)} />
-{/if}
 <div class="flex flex-col">
 	{#if url}
 		<div class="relative" transition:fade>
@@ -101,7 +93,7 @@
 					</div>
 				</div>
 			{/if}
-			<div class="absolute bottom-1 right-1 z-10">
+			<div class="absolute bottom-1 right-1">
 				{#if displayActions}
 					<div class="flex space-x-2">
 						{#snippet actionButton(icon: any, text: string, onClick: any)}
@@ -119,7 +111,6 @@
 						{/snippet}
 						{@render actionButton(showExif ? faClose : faCircleInfo, 'Info', toggleExif)}
 						{@render actionButton(faDownload, 'Download', downloadImage)}
-						<!-- {@render actionButton(faUpRightAndDownLeftFromCenter, 'Enlarge', openImageModal)} -->
 					</div>
 				{/if}
 			</div>
