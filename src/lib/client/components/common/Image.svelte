@@ -1,11 +1,6 @@
 <script lang="ts">
 	import type { ImageDto } from '$lib/shared/types';
-	import {
-		faCircleInfo,
-		faClose,
-		faDownload,
-		faUpRightAndDownLeftFromCenter
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faCircleInfo, faClose, faDownload } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { fade, slide } from 'svelte/transition';
 	import ImageModal from './ImageModal.svelte';
@@ -17,8 +12,16 @@
 		height?: number;
 		showTags?: boolean;
 		displayActions?: boolean;
+		onclick?: () => void;
 	};
-	let { image, width, height, showTags = false, displayActions = true }: ImageProps = $props();
+	let {
+		image,
+		width,
+		height,
+		showTags = false,
+		displayActions = true,
+		onclick
+	}: ImageProps = $props();
 	let showEnlarged = $state(false);
 	let url: string | null = $state(null);
 	let exif: any | null = $state(null);
@@ -42,11 +45,11 @@
 		} else if (height) {
 			url = image.url + `?height=${height}`;
 		} else {
-			url = image.url + '?width=2000';
+			url = image.url;
 		}
 	};
 
-	const downloadImage = () => {
+	const downloadImage = (event: Event) => {
 		const a = document.createElement('a');
 		a.href = image.url + '?download=true';
 		a.download = image.title;
@@ -66,7 +69,9 @@
 		exif = data;
 	};
 
-	const toggleExif = () => {
+	const toggleExif = (event: Event) => {
+		event.preventDefault();
+		event.stopImmediatePropagation();
 		showExif = !showExif;
 	};
 </script>
@@ -77,7 +82,9 @@
 <div class="flex flex-col">
 	{#if url}
 		<div class="relative" transition:fade>
-			<img src={url} alt={image.title} class="h-full w-full rounded-t" loading="lazy" />
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+			<img src={url} alt={image.title} {onclick} class="h-full w-full rounded-t" loading="lazy" />
 
 			{#if showExif && exif}
 				<div
@@ -94,17 +101,17 @@
 					</div>
 				</div>
 			{/if}
-			<div class="absolute bottom-1 right-1">
+			<div class="absolute bottom-1 right-1 z-10">
 				{#if displayActions}
 					<div class="flex space-x-2">
-						{#snippet actionButton(icon, text, onClick)}
+						{#snippet actionButton(icon: any, text: string, onClick: any)}
 							<button
 								class="group relative border !border-white bg-transparent p-1.5 text-white"
 								onclick={onClick}
 							>
 								<Fa {icon} size="xs" />
 								<span
-									class="absolute bottom-full left-1/2 z-50 mb-1 -translate-x-1/2 transform rounded-md bg-bg-secondary px-2 py-1 text-xs font-medium text-text opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+									class="absolute bottom-full left-1/2 mb-1 -translate-x-1/2 transform rounded-md bg-bg-secondary px-2 py-1 text-xs font-medium text-text opacity-0 transition-opacity duration-100 group-hover:opacity-100"
 								>
 									{text}
 								</span>
@@ -112,13 +119,13 @@
 						{/snippet}
 						{@render actionButton(showExif ? faClose : faCircleInfo, 'Info', toggleExif)}
 						{@render actionButton(faDownload, 'Download', downloadImage)}
-						{@render actionButton(faUpRightAndDownLeftFromCenter, 'Enlarge', openImageModal)}
+						<!-- {@render actionButton(faUpRightAndDownLeftFromCenter, 'Enlarge', openImageModal)} -->
 					</div>
 				{/if}
 			</div>
 		</div>
 	{/if}
-	{#if showTags}
+	{#if showTags && image.tags.length > 0}
 		<div class="py-1">
 			{#each image.tags as tag}
 				<Tag>{tag}</Tag>
