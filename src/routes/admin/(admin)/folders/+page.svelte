@@ -7,7 +7,14 @@
 	const images = $state([
 		{ id: 1, name: 'Image 1', src: 'image1.jpg' },
 		{ id: 2, name: 'Image 2', src: 'image2.jpg' },
-		{ id: 3, name: 'Image 3', src: 'image3.jpg' }
+		{ id: 3, name: 'Image 3', src: 'image3.jpg' },
+		{ id: 4, name: 'Image 4', src: 'image4.jpg' },
+		{ id: 5, name: 'Image 5', src: 'image5.jpg' },
+		{ id: 6, name: 'Image 6', src: 'image6.jpg' },
+		{ id: 7, name: 'Image 7', src: 'image7.jpg' },
+		{ id: 8, name: 'Image 8', src: 'image8.jpg' },
+		{ id: 9, name: 'Image 9', src: 'image9.jpg' },
+		{ id: 10, name: 'Image 10', src: 'image10.jpg' }
 	]);
 
 	// Folders list
@@ -47,35 +54,17 @@
 	<h1 class="mb-4 text-2xl font-bold">Organize Images into Folders</h1>
 
 	<!-- Button to create a new folder -->
-	<button class="btn mb-4" on:click={createFolder}>
+	<button class="btn mb-4" onclick={createFolder}>
 		<Fa icon={faPlusCircle} class="mr-2" />
 		Create New Folder
 	</button>
-
-	<!-- Display Unorganized Images -->
-	<div class="mb-6">
-		<h2 class="mb-2 text-xl font-semibold">Unorganized Images</h2>
-		<div class="grid grid-cols-3 gap-4">
-			{#each images as image}
-				<div
-					class="rounded-md border border-border bg-bg-secondary p-4 text-center"
-					draggable="true"
-					on:dragstart={() => handleDragStart(image)}
-				>
-					<img src={image.src} alt={image.name} class="mx-auto mb-2 h-32 w-full object-cover" />
-					<span>{image.name}</span>
-				</div>
-			{/each}
-		</div>
-	</div>
-
 	<!-- Display Folders -->
 	{#if folders.length > 0}
 		<h2 class="mb-2 text-xl font-semibold">Folders</h2>
 		<div class="grid grid-cols-3 gap-4">
-			{#each folders as folder}
+			{#each folders as folder (folder.id)}
 				<!-- Use the Folder component -->
-				<Folder {folder} onDrop={handleDrop} />
+				<Folder {folder} onDrop={handleDrop} onRename={() => {}} />
 			{/each}
 		</div>
 	{/if}
