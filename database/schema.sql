@@ -14,11 +14,19 @@ CREATE TABLE IF NOT EXISTS tags (
     name TEXT NOT NULL,
     CONSTRAINT name_unique UNIQUE (name)
 );
+-- `metadata` stores the metadata of the images.
 CREATE TABLE IF NOT EXISTS metadata (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     image_id UUID NOT NULL,
-    -- We'll store the EXIF data as JSONB in this column for now
-    exif_data JSONB,
+    date_time_original TIMESTAMP,
+    model VARCHAR(255),
+    f_number VARCHAR(12),
+    exposure_time VARCHAR(12),
+    iso INTEGER,
+    focal_length VARCHAR(12),
+    flash BOOLEAN,
+    exposure_bias FLOAT,
+    lens_model VARCHAR(255),
     FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE,
     CONSTRAINT image_id_unique UNIQUE (image_id)
 );

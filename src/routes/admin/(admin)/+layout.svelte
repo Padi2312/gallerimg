@@ -25,41 +25,25 @@
 		<aside class="bg-muted/40 hidden border-r border-border lg:block" class:hidden={!showSidebar}>
 			<div class="flex h-full max-h-screen flex-col gap-2">
 				<nav class="grid items-start p-2 px-4 font-medium">
-					<a
-						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-						href="/admin/dashboard"
-					>
-						<Fa icon={faHome} />
-						Dashboard
-					</a>
-					<a
-						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-						href="/admin/photos/upload"
-					>
-						<Fa icon={faUpload} />
-						Upload</a
-					>
-					<a
-						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-						href="/admin/photos"
-					>
-						<Fa icon={faImage} />
-						Photos
-					</a>
-					<a
-						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-						href="/admin/tags"
-					>
-						<Fa icon={faTags} />
-						Tags</a
-					>
-					<a
-						class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-						href="/admin/settings"
-					>
-						<Fa icon={faCog} />
-						Settings</a
-					>
+					{#snippet navItem(
+						/** @type {string} */ href,
+						/** @type {import("@fortawesome/fontawesome-common-types").IconDefinition} */ icon,
+						/** @type {string} */ text
+					)}
+						<a
+							class="text-muted-foreground flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+							{href}
+							onclick={toggleSidebar}
+						>
+							<Fa {icon} />
+							{text}
+						</a>
+					{/snippet}
+					{@render navItem('/admin/dashboard', faHome, 'Dashboard')}
+					{@render navItem('/admin/photos', faImage, 'Photos')}
+					{@render navItem('/admin/tags', faTags, 'Tags')}
+					{@render navItem('/admin/settings', faCog, 'Settings')}
+
 					<button
 						class="text-muted-foreground mt-4 flex items-center gap-3 rounded-lg bg-transparent px-3 py-2 transition-all hover:text-primary"
 						onclick={() => signOut({ callbackUrl: '/' })}

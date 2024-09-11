@@ -5,6 +5,7 @@ import type { ImageTagsRepository } from "./ImageTagRepository";
 import type { TagsRepository } from "./TagsRepository";
 
 export class ImagesRepository extends BaseRepository<ImageModel> {
+
     private tagsRepo: TagsRepository;
     private imageTagsRepo: ImageTagsRepository;
 
@@ -63,6 +64,11 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
             ...row,
             tags: row.tags ?? []
         }));
+    }
+
+    async findMostDownloaded(limit: number) {
+        const query = 'SELECT * FROM images ORDER BY download_count DESC LIMIT $1';
+        return await this.db.all<ImageModel>(query, [limit]);
     }
 
     async getImageWithTags(imageId: string): Promise<(ImageModel & { tags: string[]; }) | null> {

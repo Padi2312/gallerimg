@@ -40,7 +40,7 @@
 			case ',':
 			case 'Enter':
 				e.preventDefault();
-				addTag(filteredSuggestions[selectedIndex].toLowerCase() || newTag.toLowerCase());
+				addTag(filteredSuggestions[selectedIndex]?.toLowerCase() || newTag.toLowerCase());
 				break;
 			case 'ArrowDown':
 				e.preventDefault();

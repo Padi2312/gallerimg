@@ -1,18 +1,22 @@
 <script lang="ts">
-	import type { ImageDto } from '$lib/shared/types';
 	import Image from '$lib/client/components/common/Image.svelte';
 	import type { TagModel } from '$lib/server/types/database-types';
+	import type { ImageDto } from '$lib/shared/types';
 	import Tag from './Tag.svelte';
-	import { fade } from 'svelte/transition';
-	import { flip } from 'svelte/animate';
+	import GalleryLightbox from './gallery/GalleryLightbox.svelte';
 
 	type GalleryProps = {
 		images: ImageDto[];
 		tags: TagModel[];
 	};
 	let { images, tags: tagList }: GalleryProps = $props();
-	let tags = $state([...tagList]);
+
+	let selectedImage: ImageDto | null = $state(null);
 	let selectedTags: TagModel[] = $state([]);
+	let currentIndex = $state(0);
+	let currentTranslateX = $state(0);
+	let imageWidth = 0;
+	// Filter images based on selected tags
 	let filteredItems = $derived(
 		selectedTags.length > 0
 			? images.filter((item) => {
@@ -22,40 +26,62 @@
 				})
 			: images
 	);
+
+
+
+	const openLightbox = (image: ImageDto) => {
+		selectedImage = image;
+		currentIndex = filteredItems.findIndex((img) => img.id === image.id);
+		currentTranslateX = -currentIndex * imageWidth;
+	};
+
+	const closeLightbox = () => {
+		selectedImage = null;
+	};
+
+	function toggleTag(tag: TagModel) {
+		if (selectedTags.includes(tag)) {
+			selectedTags = selectedTags.filter((t) => t !== tag);
+		} else {
+			selectedTags = [...selectedTags, tag];
+		}
+	}
 </script>
+
+<svelte:window onkeydown={(e) => e.key === 'Escape' && closeLightbox()} />
 
 <div class="container mx-auto p-4">
 	<div class="mb-4 flex flex-wrap gap-2">
 		<button
-			class="py-0 transition-colors {selectedTags
-				? 'border-2 border-border bg-transparent'
-				: 'text-secondary-foreground bg-secondary'}"
+			class="py-0 transition-colors {selectedTags.length === 0
+				? 'text-secondary-foreground bg-secondary'
+				: 'border-2 border-border bg-transparent'}"
 			onclick={() => (selectedTags = [])}
 		>
 			All
 		</button>
-		<div>
-			{#each tags as tag}
-				<Tag
-					isActive={selectedTags.includes(tag)}
-					onClick={() => {
-						if (selectedTags.includes(tag)) {
-							selectedTags = selectedTags.filter((t) => t !== tag);
-						} else {
-							selectedTags = [...selectedTags, tag];
-						}
-					}}
-				>
-					{tag.name}
-				</Tag>
-			{/each}
-		</div>
+
+		{#each tagList as tag}
+			<Tag isActive={selectedTags.includes(tag)} onClick={() => toggleTag(tag)}>
+				{tag.name}
+			</Tag>
+		{/each}
 	</div>
-	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+
+	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 		{#each filteredItems as item (item.id)}
-			<div transition:fade={{ duration: 300 }} animate:flip={{ duration: 300 }}>
-				<Image image={item} width={400} showTags displayActions />
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<div
+				class="relative cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
+				onclick={() => openLightbox(item)}
+			>
+				<Image image={item} width={600} showTags displayActions />
 			</div>
 		{/each}
 	</div>
+
+	{#if selectedImage}
+		<GalleryLightbox images={filteredItems} {selectedImage} onClose={closeLightbox} />
+	{/if}
 </div>
