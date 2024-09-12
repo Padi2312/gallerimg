@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS images (
     description TEXT,
     hash TEXT NOT NULL,
     download_count INTEGER DEFAULT 0,
+    visible BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 -- `tags` stores the tags that are associated with the images. 
