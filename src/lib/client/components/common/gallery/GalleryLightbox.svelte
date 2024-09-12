@@ -19,7 +19,7 @@
 	let isDragging = $state(false);
 	let initialX = 0;
 	let currentX = 0;
-	let dragThreshold = 100;
+	let dragThreshold = 50;
 
 	const updateWidth = () => {
 		if (containerElement) {
@@ -87,7 +87,7 @@
 			style="transform: translateX({currentTranslateX}px);"
 		>
 			{#each images as item (item.id)}
-				<div class="flex w-full flex-shrink-0 items-center justify-center">
+				<div class="z-20 flex w-full flex-shrink-0 items-center justify-center">
 					<Image image={item} showTags />
 				</div>
 			{/each}
