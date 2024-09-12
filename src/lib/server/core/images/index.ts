@@ -70,7 +70,7 @@ export const saveImage = async (file: File): Promise<string> => {
         filename: fileName,
         hash,
     })
-    if (id === null) {
+    if (!id) {
         logger.error('Failed to save image to database')
         throw new Error('Failed to save image to database')
     }
@@ -78,7 +78,7 @@ export const saveImage = async (file: File): Promise<string> => {
     const exifData = await getExifData(fileName);
     await metadataRepository.create({
         image_id: id,
-        exif_data: JSON.stringify(exifData) as unknown as ExifReader.Tags
+        ...exifData
     })
 
     return filePath
