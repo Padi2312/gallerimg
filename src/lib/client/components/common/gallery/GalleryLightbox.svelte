@@ -36,6 +36,7 @@
 
 	function handleTouchStart(event: TouchEvent) {
 		initialX = event.touches[0].clientX;
+		currentX = initialX;
 		isDragging = true;
 	}
 
@@ -86,7 +87,7 @@
 			style="transform: translateX({currentTranslateX}px);"
 		>
 			{#each images as item (item.id)}
-				<div class="flex w-full flex-shrink-0 items-center justify-center" style="width: 100%;">
+				<div class="flex w-full flex-shrink-0 items-center justify-center">
 					<Image image={item} showTags />
 				</div>
 			{/each}
@@ -98,13 +99,13 @@
 				onclick={() => navigate(-1)}
 				class="absolute left-4 top-1/2 -translate-y-1/2 transform rounded-full bg-transparent p-2 text-white"
 			>
-				<Fa icon={faChevronLeft} size="lg" />
+				<Fa icon={faChevronLeft} size="2x" />
 			</button>
 			<button
 				onclick={() => navigate(1)}
 				class="absolute right-4 top-1/2 -translate-y-1/2 transform rounded-full bg-transparent p-2 text-white"
 			>
-				<Fa icon={faChevronRight} size="lg" />
+				<Fa icon={faChevronRight} size="2x" />
 			</button>
 		{/if}
 	</div>

@@ -27,8 +27,6 @@
 			: images
 	);
 
-
-
 	const openLightbox = (image: ImageDto) => {
 		selectedImage = image;
 		currentIndex = filteredItems.findIndex((img) => img.id === image.id);
@@ -49,6 +47,12 @@
 </script>
 
 <svelte:window onkeydown={(e) => e.key === 'Escape' && closeLightbox()} />
+
+{#if selectedImage}
+	<div class="max-w-xl">
+		<GalleryLightbox images={filteredItems} {selectedImage} onClose={closeLightbox} />
+	</div>
+{/if}
 
 <div class="container mx-auto p-4">
 	<div class="mb-4 flex flex-wrap gap-2">
@@ -80,8 +84,4 @@
 			</div>
 		{/each}
 	</div>
-
-	{#if selectedImage}
-		<GalleryLightbox images={filteredItems} {selectedImage} onClose={closeLightbox} />
-	{/if}
 </div>
