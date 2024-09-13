@@ -11,7 +11,12 @@ export const GET: RequestHandler = async () => {
     }
 }
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
+    const session = await locals.auth();
+    if (!session) {
+        return errorResponse(401, 'Unauthorized');
+    }
+
     try {
         const { name, parentId } = await request.json();
         const parent = parentId ? await foldersRepository.findById(parentId) : null;
@@ -26,7 +31,11 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 }
 
-export const DELETE: RequestHandler = async ({ params }) => {
+export const DELETE: RequestHandler = async ({ params, locals }) => {
+    const session = await locals.auth();
+    if (!session) {
+        return errorResponse(401, 'Unauthorized');
+    }
     try {
         const folderId = params.id;
         if (!folderId) {

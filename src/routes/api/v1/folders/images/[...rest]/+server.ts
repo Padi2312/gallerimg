@@ -2,7 +2,11 @@ import { foldersRepository } from "$lib/server/core/database";
 import { errorResponse } from "$lib/server/utils";
 import type { RequestHandler } from "@sveltejs/kit";
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request,locals }) => {
+    const session = await locals.auth();
+    if (!session) {
+        return errorResponse(401, 'Unauthorized');
+    }
     const { name, parentId } = await request.json();
     if (!name) {
         return errorResponse(400, 'No name provided');
