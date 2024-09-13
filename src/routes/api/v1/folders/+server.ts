@@ -4,7 +4,7 @@ import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async () => {
     try {
-        const folders = await foldersRepository.findRoots();
+        const folders = await foldersRepository.findAll();
         return json(folders);
     } catch (error) {
         return errorResponse(500, JSON.stringify(error));
