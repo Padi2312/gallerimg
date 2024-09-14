@@ -52,3 +52,8 @@ export interface FolderModel {
     parent_folder_id?: string;
     created_at?: string;
 }
+
+export interface FolderImageModel {
+    folder_id: string;
+    image_id: string;
+}

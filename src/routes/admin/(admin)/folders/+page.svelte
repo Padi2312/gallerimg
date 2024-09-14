@@ -1,77 +1,98 @@
 <script lang="ts">
+	import { goto, invalidateAll } from '$app/navigation';
+	import AddImageToFolderModal from '$lib/client/components/admin/AddImageToFolderModal.svelte';
+	import LightboxModal from '$lib/client/components/common/LightboxModal.svelte';
 	import Folder from '$lib/client/pages/admin/folders/Folder.svelte';
+	import { showToast } from '$lib/client/stores/toast-store.svelte';
+	import type { FolderDto } from '$lib/shared/types';
 	import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
+	import type { PageData } from './$types';
 
-	// Images that are not in any folders
-	const images = $state([
-		{ id: 1, name: 'Image 1', src: 'image1.jpg' },
-		{ id: 2, name: 'Image 2', src: 'image2.jpg' },
-		{ id: 3, name: 'Image 3', src: 'image3.jpg' },
-		{ id: 4, name: 'Image 4', src: 'image4.jpg' },
-		{ id: 5, name: 'Image 5', src: 'image5.jpg' },
-		{ id: 6, name: 'Image 6', src: 'image6.jpg' },
-		{ id: 7, name: 'Image 7', src: 'image7.jpg' },
-		{ id: 8, name: 'Image 8', src: 'image8.jpg' },
-		{ id: 9, name: 'Image 9', src: 'image9.jpg' },
-		{ id: 10, name: 'Image 10', src: 'image10.jpg' }
-	]);
-
+	type FoldersPageProps = {
+		data: PageData;
+	};
+	let { data }: FoldersPageProps = $props();
+	let currentSelectedFolder: FolderDto | null = $state(null);
+	let showAddModal = $state(false);
 	// Folders list
-	const folders = $state([]);
-
-	// Variable to store the image being dragged
-	let draggedImage = null;
 
 	// Function to create a new folder
-	const createFolder = () => {
-		const newFolder = {
-			id: crypto.randomUUID(),
-			name: `New Folder ${folders.length + 1}`,
-			images: [],
-			isOpen: false // Toggle to open/close folder
-		};
-		folders.push(newFolder);
-	};
-
-	// Drag event: Capture the image being dragged
-	const handleDragStart = (image) => {
-		draggedImage = image;
-	};
-
-	// Drop event: Add the dragged image to the target folder
-	const handleDrop = (folder) => {
-		if (draggedImage) {
-			folder.images.push(draggedImage);
-			// Remove the image from unorganized images
-			images.splice(images.indexOf(draggedImage), 1);
-			draggedImage = null;
+	const createFolder = async () => {
+		const response = await fetch('/api/v1/folders', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				name: `New Folder ${data.folders.length + 1}`
+			})
+		});
+		if (response.ok) {
+			await invalidateAll();
+		} else {
+			showToast('Failed to create folder', 'error');
 		}
 	};
+
+	const onAddClick = (folder: FolderDto) => {
+		currentSelectedFolder = folder;
+		showAddModal = true;
+	};
+
+	const onRenameFolder = async (folder: { id: string; name: string }) => {
+		const response = await fetch(`/api/v1/folders/${folder.id}`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				name: folder.name
+			})
+		});
+
+		if (!response.ok) {
+			showToast('Failed to rename folder', 'error');
+		} else {
+			await invalidateAll();
+		}
+	};
+
+	const onOpenFolder = (folder: FolderDto) => {
+		goto(`/admin/folders/${folder.id}`);
+	};
 </script>
+
+{#if currentSelectedFolder}
+	<LightboxModal onClose={() => (currentSelectedFolder = null)}>
+		<AddImageToFolderModal
+			images={data.images}
+			folder={currentSelectedFolder}
+			onAdd={invalidateAll}
+		/>
+	</LightboxModal>
+{/if}
 
 <div class="container mx-auto p-4">
 	<h1 class="mb-4 text-2xl font-bold">Organize Images into Folders</h1>
 
 	<!-- Button to create a new folder -->
-	<button class="btn mb-4" onclick={createFolder}>
-		<Fa icon={faPlusCircle} class="mr-2" />
-		Create New Folder
+	<button class="btn flex items-center space-x-2" onclick={createFolder}>
+		<Fa icon={faPlusCircle} />
+		<span>Create New Folder</span>
 	</button>
+
 	<!-- Display Folders -->
-	{#if folders.length > 0}
-		<h2 class="mb-2 text-xl font-semibold">Folders</h2>
-		<div class="grid grid-cols-3 gap-4">
-			{#each folders as folder (folder.id)}
+	{#if data.folders.length > 0}
+		<h2 class="my-2 text-xl font-semibold">Folders</h2>
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+			{#each data.folders as folder (folder.id)}
 				<!-- Use the Folder component -->
-				<Folder {folder} onDrop={handleDrop} onRename={() => {}} />
+				<Folder {folder} {onAddClick} onRename={onRenameFolder} onOpenClick={onOpenFolder} />
 			{/each}
 		</div>
 	{/if}
 </div>
 
 <style>
-	.image-container {
-		@apply mt-2 flex items-center justify-center rounded-md border border-border bg-bg p-2;
-	}
 </style>

@@ -89,4 +89,14 @@ export class ImagesRepository extends BaseRepository<ImageModel> {
         const query = 'UPDATE images SET download_count = download_count + 1 WHERE filename = $1';
         return await this.db.run(query, [filename]) !== undefined;
     }
+
+    async findImagesWithoutFolder(): Promise<ImageModel[]> {
+        const query = `SELECT * FROM images
+WHERE id NOT IN (
+    SELECT image_id
+    FROM folder_images
+)
+`;
+        return await this.db.all<ImageModel>(query);
+    }
 }

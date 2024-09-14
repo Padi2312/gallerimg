@@ -18,3 +18,11 @@ export interface ExifData {
     exposure_bias?: number;
     lens_model?: string;
 }
+
+export interface FolderDto {
+    id: string;
+    name: string;
+    parent_id?: string;
+    children: FolderDto[];
+    images: ImageDto[];
+}

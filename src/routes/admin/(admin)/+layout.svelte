@@ -7,6 +7,7 @@
 		faImage,
 		faSignOut,
 		faTags,
+		faFolder,
 		faUpload
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
@@ -41,6 +42,8 @@
 					{/snippet}
 					{@render navItem('/admin/dashboard', faHome, 'Dashboard')}
 					{@render navItem('/admin/photos', faImage, 'Photos')}
+					{@render navItem('/admin/upload', faUpload, 'Upload')}
+					{@render navItem('/admin/folders', faFolder, 'Folders')}
 					{@render navItem('/admin/tags', faTags, 'Tags')}
 					{@render navItem('/admin/settings', faCog, 'Settings')}
 

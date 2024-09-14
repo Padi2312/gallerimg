@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Image from '$lib/client/components/common/Image.svelte';
+	import Image from '$lib/client/components/common/Photo.svelte';
 	import type { TagModel } from '$lib/server/types/database-types';
 	import type { ImageDto } from '$lib/shared/types';
 	import Tag from './Tag.svelte';

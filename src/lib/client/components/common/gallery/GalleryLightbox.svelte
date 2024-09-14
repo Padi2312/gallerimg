@@ -2,7 +2,7 @@
 	import type { ImageDto } from '$lib/shared/types';
 	import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import Image from '../Image.svelte';
+	import Image from '../Photo.svelte';
 	import LightboxModal from '../LightboxModal.svelte';
 
 	type GallerySwipeProps = {

@@ -113,6 +113,20 @@ export const getAllImages = async (): Promise<ImageDto[]> => {
     })
 }
 
+export const getImagesWithoutFolder = async (): Promise<ImageDto[]> => {
+    return (await imagesRepository.findImagesWithoutFolder()).map(image => {
+        const imgDto: ImageDto = {
+            id: image.id!.toString(),
+            url: `/api/v1/files/${image.filename}`,
+            title: image.filename,
+            tags: [],
+            createdAt: image.created_at!,
+            downloadCount: image.download_count
+        }
+        return imgDto
+    })
+}
+
 export const updateImage = async (id: string, data: Partial<ImageDto>): Promise<ImageDto> => {
     const image = await imagesRepository.findById(id);
     if (image === null) {

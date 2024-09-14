@@ -4,9 +4,7 @@ import { BaseRepository } from "../repository";
 
 export class FoldersRepository extends BaseRepository<FolderModel> {
 
-
     constructor(db: Database) {
         super(db, 'folders');
     }
-
 }
