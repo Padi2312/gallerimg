@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { faBars } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
-	import DarkModeToggle from '../common/DarkModeToggle.svelte';
 	import { slide } from 'svelte/transition';
+	import DarkModeToggle from '../common/DarkModeToggle.svelte';
 
 	type HeaderProps = {};
 	let {}: HeaderProps = $props();
 
-	let isMenuOpen = $state(true); // State for mobile menu
+	let isMenuOpen = $state(false); // State for mobile menu
 
 	function toggleMenu() {
 		isMenuOpen = !isMenuOpen;
@@ -47,16 +46,21 @@
 	</div>
 
 	<!-- Mobile Links -->
-	{#if isMenuOpen}
-		<nav
-			transition:slide
-			class="absolute z-20 mt-4 flex h-full w-full flex-col space-y-2 bg-bg sm:flex md:hidden"
-		>
-			{#snippet link(url: string, text: string)}
-				<a href={url} class="block p-2 font-semibold hover:underline">{text}</a>
-			{/snippet}
-			{@render link('/', 'Home')}
-			{@render link('/gallery', 'Gallery')}
-		</nav>
-	{/if}
 </header>
+
+{#if isMenuOpen}
+	<nav
+		transition:slide
+		class="absolute z-20 flex h-full w-full flex-col space-y-2 bg-bg/90 p-4 sm:flex md:hidden"
+	>
+		{#snippet link(url: string, text: string)}
+			<a
+				href={url}
+				class="block border-b border-border p-2 font-semibold hover:underline"
+				onclick={toggleMenu}>{text}</a
+			>
+		{/snippet}
+		{@render link('/', 'Home')}
+		{@render link('/gallery', 'Gallery')}
+	</nav>
+{/if}
