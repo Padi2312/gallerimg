@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import type { RequestHandler } from './$types';
 import { logger } from '$lib';
 
-export const GET: RequestHandler = async ({ params, url }) => {
+export const GET: RequestHandler = async ({ params, url, request }) => {
     const filename = params.name as string;
     const width = url.searchParams.get('width');
     const height = url.searchParams.get('height');
@@ -16,6 +16,9 @@ export const GET: RequestHandler = async ({ params, url }) => {
     }
     if (download == "true") {
         headers['Content-Disposition'] = `attachment; filename="${filename}"`;
+        const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('remote-addr') || 'unknown';
+        const userAgent = request.headers.get('user-agent') || 'unknown';
+        logger.info(`Download request for ${filename} from IP: ${clientIP}, User-Agent: ${userAgent}`);
     }
     try {
         const imageBuffer = await loadImage(filename);
