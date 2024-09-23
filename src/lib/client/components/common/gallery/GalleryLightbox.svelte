@@ -2,8 +2,8 @@
 	import type { ImageDto } from '$lib/shared/types';
 	import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import Image from '../Image.svelte';
 	import LightboxModal from '../LightboxModal.svelte';
+	import LoadingSpinner from '../LoadingSpinner.svelte';
 
 	type GallerySwipeProps = {
 		images: ImageDto[];
@@ -12,13 +12,18 @@
 	};
 	let { images, selectedImage, onClose }: GallerySwipeProps = $props();
 
-	let currentIndex = images.findIndex((img) => img.id === selectedImage?.id);
-	let containerElement: HTMLDivElement | null = null;
+	let currentIndex = $state(images.findIndex((img) => img.id === selectedImage?.id));
+	let containerElement: HTMLDivElement | null = $state(null);
 	let maxImageWidth = $state(0);
 	let currentTranslateX = $state(0);
 	let isDragging = $state(false);
-	let initialX = 0;
-	let currentX = 0;
+	let initialX = $state(0);
+	let currentX = $state(0);
+
+	let currentImageElement: HTMLImageElement | null = $state(null);
+
+	let isLoading = $state(true); // State to manage loading status
+
 	let dragThreshold = 50;
 
 	const updateWidth = () => {
@@ -30,6 +35,7 @@
 	$effect(updateWidth);
 
 	const navigate = (direction: number) => {
+		isLoading = true;
 		currentIndex = (currentIndex + direction + images.length) % images.length;
 		currentTranslateX = -currentIndex * maxImageWidth;
 	};
@@ -70,6 +76,11 @@
 			onClose();
 		}
 	};
+
+	// When the image finishes loading, hide the loading spinner
+	function handleImageLoad() {
+		isLoading = false;
+	}
 </script>
 
 <svelte:window onkeydown={onKeyDown} onresize={updateWidth} />
@@ -86,9 +97,26 @@
 			class="flex transition-transform duration-300 ease-out will-change-transform"
 			style="transform: translateX({currentTranslateX}px);"
 		>
-			{#each images as item (item.id)}
-				<div class="z-20 flex w-full flex-shrink-0 items-center justify-center">
-					<Image image={item} showTags />
+			{#each images as item, index (item.id)}
+				<div
+					class="z-20 flex w-full flex-shrink-0 items-center justify-center"
+					style="transform: translateX({(index - currentIndex) * 100}%);"
+				>
+					{#if index === currentIndex}
+						{#if isLoading}
+							<div class="absolute inset-0 flex items-center justify-center">
+								<LoadingSpinner />
+							</div>
+						{/if}
+						<img
+							bind:this={currentImageElement}
+							src={item.url}
+							alt={item.title}
+							class="max-h-full max-w-full"
+							loading="eager"
+							onload={handleImageLoad}
+						/>
+					{/if}
 				</div>
 			{/each}
 		</div>
