@@ -35,7 +35,7 @@
 
 <section class="bg-bg-secondary py-16" id="newsletter">
 	<div class="container mx-auto px-4 text-center">
-		<h2 class="mb-4 text-3xl font-bold text-primary">Newsletter</h2>
+		<h1 class="mb-4 text-3xl font-bold">Newsletter</h1>
 		{#if success == null}
 			<p class="mb-2 text-lg text-text">
 				Subscribe to the newsletter to stay up to date with my latest images.
@@ -53,7 +53,7 @@
 					bind:value={email}
 					required
 				/>
-				<LoadingButton {loading} disabled={!email}>
+				<LoadingButton {loading} disabled={!email} class="border-2">
 					<div class="flex items-center space-x-2">
 						<Fa icon={faNewspaper} />
 						<span>Subscribe</span>

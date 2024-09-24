@@ -1,9 +1,9 @@
 {
   "name": "gallerimg",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host",
     "build": "vite build",
     "preview": "vite preview",
     "test": "npm run test:integration && npm run test:unit",

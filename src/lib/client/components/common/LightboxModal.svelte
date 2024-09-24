@@ -25,7 +25,7 @@
 	onclick={handleOutsideClick}
 >
 	<!-- Close button -->
-	<button onclick={onClose} class="absolute right-4 top-4 p-2">
+	<button onclick={onClose} class="z-10 absolute right-4 top-4 p-2">
 		<Fa icon={faTimes} size="sm" />
 	</button>
 
