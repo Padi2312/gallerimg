@@ -13,6 +13,23 @@ export class FoldersService {
 
     }
 
+    async getRootFolders(): Promise<FolderDto[]> {
+        const folders = await this.foldersRepository.findAllBy("parent_folder_id", null);
+        const foldersWithImages: FolderDto[] = [];
+
+        for (const folder of folders) {
+            const imagesInFolder = await this.folderImagesRepository.findAllBy("folder_id", folder.id);
+            const images: ImageDto[] = [];
+            for (const imageInFolder of imagesInFolder) {
+                const image = await this.imagesRepository.findById(imageInFolder.image_id);
+                if (!image) continue;
+                images.push(mapImageModelToDto(image))
+            }
+            const folderDto = mapFolderModelToDto(folder, images);
+            foldersWithImages.push(folderDto);
+        }
+        return foldersWithImages;
+    }
 
     async getFoldersWithImages(): Promise<FolderDto[]> {
         const folders = await this.foldersRepository.findAll();

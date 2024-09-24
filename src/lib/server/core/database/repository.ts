@@ -65,9 +65,14 @@ export abstract class BaseRepository<T> {
         return result;
     }
 
-    async findAllBy(field: string, value: string): Promise<T[]> {
-        const query = `SELECT * FROM ${this.tableName} WHERE ${field} = $1`;
-        const results = await this.db.all<T>(query, [value]);
+    async findAllBy(field: string, value: string | null | number): Promise<T[]> {
+        const query = value === null
+            ? `SELECT * FROM ${this.tableName} WHERE ${field} IS NULL`
+            : `SELECT * FROM ${this.tableName} WHERE ${field} = $1`;
+
+        const results = value === null
+            ? await this.db.all<T>(query)
+            : await this.db.all<T>(query, [value]);
         if (!results || results.length === 0) {
             logger.warn(`No records found in ${this.tableName} with ${field} ${value}`);
             return [];

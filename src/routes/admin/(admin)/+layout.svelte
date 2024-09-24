@@ -21,7 +21,6 @@
 </script>
 
 <div class="bg-muted/40 flex min-h-screen w-full flex-col">
-	<Header showToggleSidebar={true} {toggleSidebar} />
 	<div class="flex flex-1 flex-col lg:flex-row">
 		<aside class="bg-muted/40 hidden border-r border-border lg:block" class:hidden={!showSidebar}>
 			<div class="flex h-full max-h-screen flex-col gap-2">

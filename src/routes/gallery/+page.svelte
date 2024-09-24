@@ -1,6 +1,7 @@
 <script lang="ts">
+	import Gallery from '$lib/client/components/common/gallery/Gallery.svelte';
 	import GalleryLightbox from '$lib/client/components/common/gallery/GalleryLightbox.svelte';
-	import Image from '$lib/client/components/common/Image.svelte';
+	import Photo from '$lib/client/components/common/Photo.svelte';
 	import Tag from '$lib/client/components/common/Tag.svelte';
 	import Footer from '$lib/client/components/layout/Footer.svelte';
 	import Header from '$lib/client/components/layout/Header.svelte';
@@ -46,7 +47,6 @@
 {#if selectedImage}
 	<GalleryLightbox images={filteredItems} {selectedImage} onClose={closeLightbox} />
 {/if}
-<Header />
 <div class="container relative mx-auto justify-center bg-bg px-4">
 	<div class="my-4 flex flex-wrap gap-2">
 		<button
@@ -64,18 +64,5 @@
 			</Tag>
 		{/each}
 	</div>
-
-	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-		{#each filteredItems as item (item.id)}
-			<!-- svelte-ignore a11y_no_static_element_interactions -->
-			<!-- svelte-ignore a11y_click_events_have_key_events -->
-			<div
-				class="relative cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
-				onclick={() => openLightbox(item)}
-			>
-				<Image image={item} width={600} showTags displayActions />
-			</div>
-		{/each}
-	</div>
+	<Gallery images={filteredItems} />
 </div>
-<Footer />
