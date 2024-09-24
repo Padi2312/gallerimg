@@ -1,16 +1,15 @@
 <script lang="ts">
-	import Footer from '$lib/client/components/layout/Footer.svelte';
-	import Header from '$lib/client/components/layout/Header.svelte';
+	import { page } from '$app/stores';
 	import NewsletterUnit from '$lib/client/pages/main/NewsletterUnit.svelte';
 	import type { ImageDto } from '$lib/shared/types/index.js';
 	import {
+		faLayerGroup,
 		faArrowRight,
 		faDownLong,
 		faEnvelope,
 		faImages
 	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { page } from '$app/stores';
 
 	export let data;
 	const images: ImageDto[] = data.images;
@@ -88,7 +87,7 @@
 		<p class="mb-8 max-w-2xl text-lg font-light">
 			Scroll down for a little foretaste, subscribe to the newsletter to stay up to date
 		</p>
-		<div class="flex space-x-4">
+		<div class="grid gap-2 md:flex md:space-x-4">
 			{#snippet linkButton(icon: any, text: string, href: string)}
 				<a {href} class="btn flex items-center gap-2 border-2">
 					<Fa {icon} size="lg" />
@@ -97,6 +96,7 @@
 			{/snippet}
 			{@render linkButton(faImages, 'View All Images', '/gallery')}
 			{@render linkButton(faEnvelope, 'Subscribe to Newsletter', '#newsletter')}
+			{@render linkButton(faLayerGroup, 'Categories', '/categories')}
 		</div>
 	</div>
 	<div class="absolute bottom-4 flex w-full justify-center">
