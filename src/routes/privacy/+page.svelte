@@ -7,13 +7,13 @@
 	<Header />
 	<header class="bg-bg-secondary py-6">
 		<div class="container mx-auto px-4">
-			<h1 class="text-3xl font-bold text-primary">Data Privacy Policy</h1>
+			<h1 class="text-3xl font-bold">Data Privacy Policy</h1>
 		</div>
 	</header>
 
 	<main class="container mx-auto px-4 py-8">
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">1. Data Controller</h2>
+			<h2 class="mb-4 text-2xl font-semibold">1. Data Controller</h2>
 			<p class="mb-4">
 				The controller responsible for processing your personal data in connection with the
 				newsletter is:
@@ -24,7 +24,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">2. What Data is Processed?</h2>
+			<h2 class="mb-4 text-2xl font-semibold">2. What Data is Processed?</h2>
 			<p class="mb-4">For sending the newsletter, we only process the following personal data:</p>
 			<ul class="mb-4 list-inside list-disc">
 				<li>Your email address</li>
@@ -32,7 +32,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">3. Purpose of Data Processing</h2>
+			<h2 class="mb-4 text-2xl font-semibold">3. Purpose of Data Processing</h2>
 			<p class="mb-4">
 				Your personal data is processed solely for the purpose of sending you our newsletter, which
 				contains information about news. Your data will not be used for other purposes or sold to
@@ -41,7 +41,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">4. Legal Basis for Processing</h2>
+			<h2 class="mb-4 text-2xl font-semibold">4. Legal Basis for Processing</h2>
 			<p class="mb-4">
 				The processing of your data is based on your voluntary consent, in accordance with Art.
 				6(1)(a) GDPR. You can withdraw this consent at any time without providing reasons, effective
@@ -50,9 +50,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">
-				5. Disclosure of Data to Third Parties
-			</h2>
+			<h2 class="mb-4 text-2xl font-semibold">5. Disclosure of Data to Third Parties</h2>
 			<p class="mb-4">
 				Your personal data will only be disclosed to third parties under the following
 				circumstances:
@@ -76,7 +74,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">6. Data Retention</h2>
+			<h2 class="mb-4 text-2xl font-semibold">6. Data Retention</h2>
 			<p class="mb-4">
 				Your personal data will be stored as long as you remain subscribed to the newsletter. Upon
 				unsubscribing, your email address will be promptly deleted unless longer retention periods
@@ -85,7 +83,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">7. Your Rights</h2>
+			<h2 class="mb-4 text-2xl font-semibold">7. Your Rights</h2>
 			<p class="mb-4">Under applicable data protection laws, you have the following rights:</p>
 			<ul class="mb-4 list-inside list-disc">
 				<li>Right of Access</li>
@@ -99,7 +97,7 @@
 		</section>
 
 		<section class="mb-8">
-			<h2 class="mb-4 text-2xl font-semibold text-secondary">8. Contact</h2>
+			<h2 class="mb-4 text-2xl font-semibold">8. Contact</h2>
 			<p class="mb-4">
 				If you have any questions about the processing of your personal data or wish to exercise
 				your rights, you can contact us at any time at the following address:

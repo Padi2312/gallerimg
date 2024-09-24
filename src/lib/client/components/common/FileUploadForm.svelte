@@ -108,7 +108,7 @@
 				for="file-upload"
 				class="flex cursor-pointer flex-col items-center justify-center space-y-2"
 			>
-				<Fa icon={faUpload} class="h-12 w-12 text-primary" />
+				<Fa icon={faUpload} class="h-12 w-12" />
 				<span class="text-lg font-medium">Drag and drop your files here</span>
 				<span class="text-text/70 text-sm">or click to select files</span>
 			</label>

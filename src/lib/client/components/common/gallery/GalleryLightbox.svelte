@@ -99,7 +99,7 @@
 		>
 			{#each images as item, index (item.id)}
 				<div
-					class="z-20 flex w-full flex-shrink-0 items-center justify-center"
+					class="flex w-full flex-shrink-0 items-center justify-center"
 					style="transform: translateX({(index - currentIndex) * 100}%);"
 				>
 					{#if index === currentIndex}
@@ -112,7 +112,7 @@
 							bind:this={currentImageElement}
 							src={item.url}
 							alt={item.title}
-							class="max-h-full max-w-full"
+							class="aspect-auto max-h-screen"
 							loading="eager"
 							onload={handleImageLoad}
 						/>

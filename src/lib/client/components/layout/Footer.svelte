@@ -7,7 +7,7 @@
 		<p>&copy; {currentYear} Photo Parndt. All rights reserved.</p>
 		<div class=" flex items-center space-x-4">
 			<a href="/imprint" class="hover:underline">Imprint</a>
-			<a href="/privacy" class="hover:underline">Data protection</a>
+			<a href="/privacy" class="hover:underline">Privacy Policy</a>
 		</div>
 	</div>
 </footer>

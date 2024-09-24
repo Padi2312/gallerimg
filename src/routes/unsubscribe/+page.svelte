@@ -25,12 +25,12 @@
 	{:else}
 		<div class="flex h-screen items-center justify-center p-4">
 			<div class="w-full max-w-lg rounded-lg bg-bg-secondary p-8 text-center shadow-lg">
-				<h1 class="mb-4 text-3xl font-semibold text-primary">We're Sorry to See You Go</h1>
+				<h1 class="mb-4 text-3xl font-semibold">We're Sorry to See You Go</h1>
 				<p class="mb-6">
 					You've successfully unsubscribed from our newsletter. We're sorry to see you go. If you
 					have any questions or need assistance, please feel free to <a
 						href="https://photo.parndt.de/contact"
-						class="font-bold text-primary hover:underline">contact us</a
+						class="font-bold hover:underline">contact us</a
 					>.
 				</p>
 				<p>Thank you for being with us.</p>
