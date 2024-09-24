@@ -14,7 +14,7 @@
 	<div class="grid h-full w-full grid-cols-1 gap-6 md:grid-cols-2 lg:p-12 xl:grid-cols-3">
 		{#each data.folders as folder}
 			<a
-				class="justify-cente flex flex-col items-center hover:scale-105"
+				class="justify-cente flex flex-col items-center rounded-xl bg-bg-secondary py-4 shadow-xl hover:scale-105"
 				href="/categories/{folder.name}-{folder.id}"
 			>
 				{#if folder.images.length > 0}
@@ -22,7 +22,7 @@
 						<img
 							alt={folder.name}
 							src={folder.images[0].url + '?width=400'}
-							class="h-full w-full rounded object-fill"
+							class="h-full w-full rounded-xl object-fill"
 						/>
 					</div>
 				{:else}
