@@ -15,19 +15,19 @@
 	<div class="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 lg:p-12 xl:grid-cols-3">
 		{#each data.folders as folder}
 			<a
-				class="justify-cente flex flex-col items-center rounded-xl bg-bg-secondary p-4 shadow-xl hover:scale-105"
+				class="justify-center flex flex-col items-center p-4 shadow-xl hover:scale-[102%]"
 				href="/categories/{folder.name}-{folder.id}"
 			>
+				<span class="mb-2 text-center text-lg font-medium lg:text-2xl">{folder.name}</span>
 				{#if folder.images.length > 0}
 					<img
 						alt={folder.name}
 						src={folder.images[0].url + '?width=400'}
-						class="h-full w-full rounded-xl object-fill"
+						class="h-full w-full rounded-md border-4 border-border object-fill"
 					/>
 				{:else}
 					<Fa icon={faFolder} size="3x" />
 				{/if}
-				<span class="text-center text-xl font-light">{folder.name}</span>
 			</a>
 		{/each}
 	</div>
