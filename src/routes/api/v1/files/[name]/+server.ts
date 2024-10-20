@@ -10,6 +10,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
     const width = url.searchParams.get('width');
     const height = url.searchParams.get('height');
     const download = url.searchParams.get('download');
+    const compress = url.searchParams.get('compress');
 
     const headers: HeadersInit = {
         'Content-Type': 'image/jpeg',
@@ -24,20 +25,22 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
         const imageBuffer = await loadImage(filename);
         const resizedImageBuffer = sharp(imageBuffer)
 
-        if (!width && !height) {
+        if (!width && !height && !compress) {
             return new Response(imageBuffer, {
                 headers
             });
         }
 
-        if (width && !height) {
+        if (width) {
             resizedImageBuffer.resize(parseInt(width));
         }
-        else if (!width && height) {
+
+        if (height) {
             resizedImageBuffer.resize(null, parseInt(height));
         }
-        else {
-            resizedImageBuffer.resize(parseInt(width!), parseInt(height!));
+
+        if (compress) {
+            resizedImageBuffer.jpeg({ quality: parseInt(compress) });
         }
 
         return new Response(await resizedImageBuffer.toBuffer(), {

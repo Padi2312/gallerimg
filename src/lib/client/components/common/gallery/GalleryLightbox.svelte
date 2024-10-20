@@ -110,10 +110,9 @@
 						{/if}
 						<img
 							bind:this={currentImageElement}
-							src={item.url}
+							src={item.url + "?compress=50"}
 							alt={item.title}
 							class="relative left-1/2 aspect-auto xl:max-h-[90%] -translate-x-1/2"
-							loading="eager"
 							onload={handleImageLoad}
 						/>
 					{/if}
