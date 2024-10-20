@@ -17,6 +17,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
     }
     if (download == "true") {
         headers['Content-Disposition'] = `attachment; filename="${filename}"`;
+        headers['Cache-Control'] = 'public, max-age=86400';
         const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('remote-addr') || 'unknown';
         const userAgent = request.headers.get('user-agent') || 'unknown';
         logger.info(`Download request for ${filename} from IP: ${clientIP}, User-Agent: ${userAgent}`);
