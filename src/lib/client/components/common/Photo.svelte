@@ -3,25 +3,16 @@
 	import { faCircleInfo, faClose, faDownload } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { fade, slide } from 'svelte/transition';
-	import ImageModal from './ImageModal.svelte';
-	import Tag from './Tag.svelte';
 
 	type ImageProps = {
 		image: ImageDto;
+		compress?: number;
 		width?: number;
 		height?: number;
-		showTags?: boolean;
 		displayActions?: boolean;
 		onclick?: () => void;
 	};
-	let {
-		image,
-		width,
-		height,
-		showTags = false,
-		displayActions = true,
-		onclick
-	}: ImageProps = $props();
+	let { image, width, height, compress, displayActions = true, onclick }: ImageProps = $props();
 	let url: string | null = $state(null);
 	let exif: any | null = $state(null);
 	let showExif = $state(false);
@@ -37,15 +28,11 @@
 	});
 
 	const setImageUrl = (image: ImageDto) => {
-		if (width && height) {
-			url = image.url + `?width=${width}&height=${height}`;
-		} else if (width) {
-			url = image.url + `?width=${width}`;
-		} else if (height) {
-			url = image.url + `?height=${height}`;
-		} else {
-			url = image.url;
-		}
+		const params = new URLSearchParams();
+		if (width) params.append('width', width.toString());
+		if (height) params.append('height', height.toString());
+		if (compress) params.append('compress', compress.toString());
+		url = `${image.url}?${params.toString()}`;
 	};
 
 	const downloadImage = (event: Event) => {
@@ -114,13 +101,6 @@
 					</div>
 				{/if}
 			</div>
-		</div>
-	{/if}
-	{#if showTags && image.tags.length > 0}
-		<div class="py-1">
-			{#each image.tags as tag}
-				<Tag>{tag}</Tag>
-			{/each}
 		</div>
 	{/if}
 </div>

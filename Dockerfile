@@ -15,14 +15,12 @@ WORKDIR /app
 COPY package.json bun.lockb ./
 RUN bun install --production 
 
-# Stage 2: Create the final image
-FROM oven/bun:1-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/database/schema.sql ./database/schema.sql
 COPY --from=builder /app/templates /app/templates
 COPY --from=dependencies /app/node_modules ./node_modules
-
 
 ENV NODE_ENV=production
 ENV BODY_SIZE_LIMIT=Infinity
@@ -30,4 +28,4 @@ ENV BODY_SIZE_LIMIT=Infinity
 ENV AUTH_TRUST_HOST=true
 
 EXPOSE 3000
-CMD ["--bun","./build/index.js"]
+CMD ["node","-r","dotenv/config","./build/index.js"]

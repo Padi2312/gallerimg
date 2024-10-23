@@ -4,6 +4,7 @@
 	import Fa from 'svelte-fa';
 	import LightboxModal from '../LightboxModal.svelte';
 	import LoadingSpinner from '../LoadingSpinner.svelte';
+	import Photo from '../Photo.svelte';
 
 	type GallerySwipeProps = {
 		images: ImageDto[];
@@ -13,31 +14,22 @@
 	let { images, selectedImage, onClose }: GallerySwipeProps = $props();
 
 	let currentIndex = $state(images.findIndex((img) => img.id === selectedImage?.id));
-	let containerElement: HTMLDivElement | null = $state(null);
-	let maxImageWidth = $state(0);
-	let currentTranslateX = $state(0);
 	let isDragging = $state(false);
 	let initialX = $state(0);
 	let currentX = $state(0);
+	let currentTranslateX = $state(0);
+	let isLoading = $state(true);
+	let previousIndex = $state(0);
 
-	let currentImageElement: HTMLImageElement | null = $state(null);
-
-	let isLoading = $state(true); // State to manage loading status
-
-	let dragThreshold = 50;
-
-	const updateWidth = () => {
-		if (containerElement) {
-			maxImageWidth = containerElement.clientWidth;
-			currentTranslateX = -currentIndex * maxImageWidth;
-		}
-	};
-	$effect(updateWidth);
+	$effect(() => {
+		currentTranslateX = -currentIndex * 100;
+		previousIndex = currentIndex;
+	});
 
 	const navigate = (direction: number) => {
 		isLoading = true;
 		currentIndex = (currentIndex + direction + images.length) % images.length;
-		currentTranslateX = -currentIndex * maxImageWidth;
+		currentTranslateX = -currentIndex * 100;
 	};
 
 	function handleTouchStart(event: TouchEvent) {
@@ -51,19 +43,26 @@
 
 		currentX = event.touches[0].clientX;
 		const deltaX = currentX - initialX;
-		currentTranslateX = -currentIndex * maxImageWidth + deltaX;
+		currentTranslateX = -currentIndex * 100 + (deltaX / window.innerWidth) * 100;
+
+		// Determine the visible images to ensure the half-swipe effect
+		if (deltaX > 0 && currentIndex > 0) {
+			previousIndex = currentIndex - 1;
+		} else if (deltaX < 0 && currentIndex < images.length - 1) {
+			previousIndex = currentIndex + 1;
+		}
 	}
 
 	function handleTouchEnd() {
 		isDragging = false;
 		const deltaX = currentX - initialX;
 
-		if (deltaX > dragThreshold && currentIndex > 0) {
-			navigate(-1); // Swipe left
-		} else if (deltaX < -dragThreshold && currentIndex < images.length - 1) {
-			navigate(1); // Swipe right
+		if (deltaX > 50 && currentIndex > 0) {
+			navigate(-1);
+		} else if (deltaX < -50 && currentIndex < images.length - 1) {
+			navigate(1);
 		} else {
-			currentTranslateX = -currentIndex * maxImageWidth;
+			currentTranslateX = -currentIndex * 100;
 		}
 	}
 
@@ -77,43 +76,38 @@
 		}
 	};
 
-	// When the image finishes loading, hide the loading spinner
 	function handleImageLoad() {
 		isLoading = false;
 	}
 </script>
 
-<svelte:window onkeydown={onKeyDown} onresize={updateWidth} />
+<svelte:window onkeydown={onKeyDown} />
 
 <LightboxModal {onClose}>
 	<div
-		bind:this={containerElement}
 		class="relative flex w-full max-w-full touch-pan-y items-center justify-center overflow-hidden"
 		ontouchstart={handleTouchStart}
 		ontouchmove={handleTouchMove}
 		ontouchend={handleTouchEnd}
 	>
 		<div
-			class="flex transition-transform duration-300 ease-out will-change-transform"
-			style="transform: translateX({currentTranslateX}px);"
+			class="flex transition-transform duration-200 ease-out"
+			style="transform: translateX({currentTranslateX}%);"
 		>
 			{#each images as item, index (item.id)}
-				<div
-					class="w-full flex-shrink-0 items-center justify-center"
-					style="transform: translateX({(index - currentIndex) * 100}%);"
-				>
-					{#if index === currentIndex}
-						{#if isLoading}
+				<div class="max-h-screen w-full flex-shrink-0 items-center justify-center">
+					{#if index === currentIndex || index === previousIndex}
+						{#if index === currentIndex && isLoading}
 							<div class="absolute inset-0 flex items-center justify-center">
 								<LoadingSpinner />
 							</div>
 						{/if}
 						<img
-							bind:this={currentImageElement}
-							src={item.url + "?compress=50"}
+							src={item.url + '?compress=30'}
 							alt={item.title}
-							class="relative left-1/2 aspect-auto xl:max-h-[90%] -translate-x-1/2"
+							class="relative left-1/2 aspect-auto max-h-full -translate-x-1/2"
 							onload={handleImageLoad}
+							loading="lazy"
 						/>
 					{/if}
 				</div>
@@ -139,4 +133,7 @@
 </LightboxModal>
 
 <style>
+	img {
+		will-change: transform, opacity;
+	}
 </style>
