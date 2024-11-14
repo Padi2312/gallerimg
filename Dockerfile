@@ -1,20 +1,23 @@
 # Stage 0: Base image
-FROM oven/bun:1 AS base
+FROM node:22 AS base
 WORKDIR /app
-COPY package.json bun.lockb ./
-RUN bun install
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
 
 # Stage 1: Build the application
 FROM base AS builder
 WORKDIR /app
 COPY . .
-RUN bun run build
+RUN pnpm run build
 
-FROM oven/bun:1 AS dependencies
+# Stage 2: Install the dependencies
+FROM base AS dependencies
 WORKDIR /app
-COPY package.json bun.lockb ./
-RUN bun install --production 
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod
 
+# Stage 3: Create the final image
 FROM node:22-slim AS runner
 WORKDIR /app
 COPY --from=builder /app/build ./build

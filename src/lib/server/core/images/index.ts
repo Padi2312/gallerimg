@@ -4,8 +4,8 @@ import type { ExifData, ImageDto } from '$lib/shared/types';
 import { createHash } from '$lib/utils';
 import * as crypto from 'crypto';
 import ExifReader from 'exifreader';
-import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { imagesRepository, imageTagsRepository, metadataRepository } from "../database";
 
 
@@ -45,8 +45,8 @@ export const getUsedStorage = async (): Promise<number> => {
     const filePaths = files.map(file => path.join(IMAGE_FOLDER, file));
     let totalBytes = 0
     for (const file of filePaths) {
-        const bunFile = Bun.file(file)
-        totalBytes += bunFile.size
+        const stats = await fs.stat(file);
+        totalBytes += stats.size;
     }
     return totalBytes
 }

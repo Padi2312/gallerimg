@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import * as nodemailer from 'nodemailer';
 import type { NewslettersRepository } from '../core/database/repositories/NewslettersRepository';
-import * as fs from 'node:fs/promises'
+import * as fs from 'fs/promises'
 
 export class MailService {
 
