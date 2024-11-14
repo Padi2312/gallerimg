@@ -19,7 +19,7 @@
 				newsletter is:
 			</p>
 			<address class="not-italic">
-				<p>Responsible person: Patrick Arndt (Website owner)</p>
+				<p>Responsible person: John Doe(Website owner)</p>
 			</address>
 		</section>
 

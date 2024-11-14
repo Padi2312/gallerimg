@@ -18,9 +18,9 @@
 				The person responsible for the content of this website according to § 5 TMG is:
 			</p>
 			<address class="not-italic">
-				<p>Patrick Arndt (Website Owner)</p>
-				<p><b>Email:</b> photo@parndt.de</p>
-				<p><b>Address:</b> Germany, 74532 Ilshofen, Ringstraße 2</p>
+				<p>John Doe (Website Owner)</p>
+				<p><b>Email:</b> john@doe.doe</p>
+				<p></p>
 			</address>
 		</section>
 
@@ -61,7 +61,7 @@
 				details:
 			</p>
 			<address class="not-italic">
-				<p>Email: photo@parndt.de</p>
+				<p>Email: john@doe.doe</p>
 				<!-- <p>Phone: [Your Phone Number]</p> -->
 			</address>
 		</section>
