@@ -11,6 +11,7 @@
 </p>
 
 ### Table of Contents
+- [Usage](#usage)
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -20,12 +21,23 @@
 - [Data Paths](#data-paths)
 - [Environment Variables](#environment-variables)
 
-## Installation
+# Usage
 
-### Prerequisites
+To upload some images you need to go to the admin page [https://localhost:3000/admin](https://localhost:3000/admin). 
+
+Credentials: `admin` / `admin`
+
+> [!NOTE]
+> You can change them by setting the `ADMIN_USERNAME` and `ADMIN_PASSWORD` environment variables. 
+
+Click on the `Upload` entry in the sidebar, then drag and drop the images you want to upload or click to select them from your file system.
+
+# Installation
+
+## Prerequisites
 - Docker 
 
-### Setup
+## Setup
 
 1. Clone the repository:
     ```bash
@@ -45,14 +57,14 @@
     > Replace the `DATABASE_URL` value with the connection string for your database server.
     > When running the database via Docker Compose, the connection string should be `postgres://user:password@host.docker.internal:5432/gallerimg`.
 
-## Development Setup 
+# Development Setup 
 
-### Prerequisites
+## Prerequisites
 
 - Node.js (v22 or higher)
 - Docker 
 
-### Setup
+## Setup
 
 > [!NOTE]
 > The database server must be running before starting the development server or running the application.
@@ -75,11 +87,11 @@
 
 4. Open the application in your browser at `http://localhost:5173`.
 
-## Data Paths
+# Data Paths
 
 - `data/images` - Image uploads directory
 
-## Environment Variables
+# Environment Variables
 
 | Env variable     | Description                                                        |
 | ---------------- | ------------------------------------------------------------------ |
