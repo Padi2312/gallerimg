@@ -5,7 +5,7 @@
 		isOpen?: boolean;
 		children: Snippet;
 	};
-	let { isOpen = true, children }: DropdownProps = $props();
+	let { isOpen = false, children }: DropdownProps = $props();
 
 	function toggleDropdown() {
 		isOpen = !isOpen;
